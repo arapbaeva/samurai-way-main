@@ -1,4 +1,5 @@
-import React from "react";
+import {renderTree} from "./render";
+
 
 export type MessageType = {
     id: number
@@ -15,13 +16,15 @@ export type PostsType = {
 }
 type ProfilePageType = {
     posts: Array<PostsType>
+    newPostText: string
 }
 export type DialogsPageType = {
     dialogs: Array<DialogsType>
     messages: Array<MessageType>
+
 }
 type SideBarType = {}
-type RootStateType = {
+export type RootStateType = {
     profilePage: ProfilePageType
     dialogsPage: DialogsPageType
     sidebar: SideBarType
@@ -32,7 +35,8 @@ let state: RootStateType = {
         posts: [
             {id: 1, message: 'Hi, how are you?', likesCount: 12},
             {id: 2, message: 'It is my first post', likesCount: 11}
-        ]
+        ],
+        newPostText: 'It-kamasutra'
     },
     dialogsPage: {
         dialogs: [
@@ -53,6 +57,22 @@ let state: RootStateType = {
         ]
     },
     sidebar: {},
+}
+
+export let addPost = () => {
+    let newPost: PostsType = {
+        id: 5,
+        message: state.profilePage.newPostText,
+        likesCount: 0
+    }
+    state.profilePage.posts.push(newPost)
+    state.profilePage.newPostText = ''
+    renderTree(state)
+}
+
+export let updateNewPostText = (newText: string) => {
+    state.profilePage.newPostText = newText
+    renderTree(state)
 }
 
 
