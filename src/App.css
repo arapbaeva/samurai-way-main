@@ -3,7 +3,6 @@
     padding: 0;
     box-sizing: border-box;
 }
-
 .wrapper {
     display: grid;
     grid-template-areas:
@@ -16,27 +15,9 @@
     grid-gap: 10px;
 }
 
-.header {
-    grid-area: h;
-    background-color: #eeeee4;
-}
 
-.nav {
-    grid-area: n;
-    background-color: #eeeee4;
-}
 
-.content {
-    grid-area: c;
-    background-color: #eeeee4;
-}
 
-.header img {
-    width: 50px;
-}
 
-.content img {
-    width: 1000px;
-    height: 100px;
-}
+
 

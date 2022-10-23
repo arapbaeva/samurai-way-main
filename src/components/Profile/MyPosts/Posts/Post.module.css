@@ -1,0 +1,7 @@
+.item img {
+    width: 80px;
+    height: 80px;
+    border-radius: 70%;
+    border: 3px solid transparent; /*2*/
+    background: linear-gradient(to right, #a3795f 50%, #012754) border-box;
+}

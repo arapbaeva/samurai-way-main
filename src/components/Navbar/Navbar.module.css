@@ -1,0 +1,17 @@
+
+
+.nav {
+    grid-area: n;
+    background-color: #eeeee4;
+}
+.item{
+    color: #333333;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 18px;
+    text-align: center;
+    padding: 3px;
+}
+
+.item.active{
+    color: red;
+}
