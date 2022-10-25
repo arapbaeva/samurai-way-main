@@ -15,6 +15,11 @@
     grid-gap: 10px;
 }
 
+.wrapper-content{
+    grid-area: c;
+    background-color: #eeeee4;
+}
+
 
 
 

@@ -29,6 +29,9 @@ export const MyPosts = () => {
                 </div>
                 <div className={s.Posts}>
                     <Post/>
+                    <Post/>
+                    <Post/>
+                    <Post/>
                 </div>
             </div>
         </>
