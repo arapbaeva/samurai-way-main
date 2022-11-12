@@ -10,7 +10,7 @@
             'n c';
     grid-template-rows: 60px 1fr;
     grid-template-columns: 2fr 10fr;
-    margin:0 auto;
+    margin:10px auto;
     width: 1200px;
     grid-gap: 10px;
 }

@@ -3,15 +3,17 @@
 .nav {
     grid-area: n;
     background-color: #eeeee4;
+    padding: 20px;
+    text-align: center;
 }
-.item{
+.item a{
     color: #333333;
     font-family: 'Josefin Sans', sans-serif;
     font-size: 18px;
-    text-align: center;
-    padding: 3px;
+    text-decoration: none;
 }
 
-.item.active{
-    color: red;
+
+ .item a:active{
+    color: gold;
 }

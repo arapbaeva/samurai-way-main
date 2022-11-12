@@ -2,7 +2,12 @@
 .header {
     grid-area: h;
     background-color: #eeeee4;
+    display: grid;
+    grid-template-columns: 5fr 1fr;
 }
 .header img {
     width: 50px;
+    margin-left: 5%;
+    margin-top: 5px;
+
 }
