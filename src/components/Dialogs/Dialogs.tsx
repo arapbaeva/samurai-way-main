@@ -1,44 +1,32 @@
 import React from 'react';
-import {DialogItem, DialogItemType} from "./DialogItem/DialogItem";
-import {Messages, MessagesType} from "./Messages/Messages";
+import {DialogItem} from "./DialogItem/DialogItem";
+import {Messages} from "./Messages/Messages";
 import s from './Dialogs.module.css';
-import {Button, TextField} from "@mui/material";
-
+import {DialogsDataType} from "../../Redux/store";
 
 
 type DialogsType = {
-    dialogsData: DialogItemType[]
-    messages: MessagesType[]
+    store: any
+    // dialogsData: DialogItemType[]
+    // message: string
+    // messages: MessageType[]
+    // dispatch: (action: ActionsTypes) => void
+    // addMessage: ()=> void
+    // updateMessage: (newPostText: string)=>void
 }
 export const Dialogs = (props: DialogsType) => {
+    const state = props.store.getState().dialogsReducer
+    let dialogsElements = state.dialogsData.map((el: DialogsDataType) => <DialogItem name={el.name} id={el.id}/>)
 
-    let dialogsElements = props.dialogsData.map(el => <DialogItem name={el.name} id={el.id}/>)
-    let messageElements = props.messages.map(el => <Messages message={el.message}/>)
     return (
         <div className={s.dialogs}>
-        <div className={s.dialogItem}>
-            {dialogsElements}
-        </div>
-            <div className={s.message}>
-                {messageElements}
+            <div className={s.dialogItem}>
+                {dialogsElements}
             </div>
-            <div className={s.messageBlock}>
-                <div className={s.messageInput}>
-                    <TextField
-                        id="outlined-textarea"
-                        label="Print post here"
-                        placeholder="Placeholder"
-                        multiline
-                        color="success"
-                        size="medium"
-                    />
-                </div>
-                <div className={s.messageButton}>
-                    <Button variant="contained" color="success" size="small" >
-                       send message
-                    </Button>
-                </div>
-            </div>
+            <Messages messages={state.messages} message={state.newMessageText} dispatch={props.store.dispatch}
+                      // addMessage={props.addMessage}
+                      // updateMessage={props.updateMessage}
+            />
         </div>
     )
 }

@@ -3,16 +3,26 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import {HashRouter} from "react-router-dom";
-import state, {addPost, RootStateType, updateAddPost} from './Redux/state';
+import {AppRootStateType, store} from "./Redux/redux-store";
+import {Provider} from "react-redux";
 
-export const renderTree = (state: RootStateType) => {
+
+export const renderTree = (state: AppRootStateType) => {
     ReactDOM.render(
         <HashRouter>
-            <App posts={state.profilePage.posts} dialogsData={state.dialogsPage.dialogsData} messages={state.dialogsPage.messages} addPost={addPost} newPostText={state.profilePage.newPostText} updateAddPost={updateAddPost}/>
+            <Provider store={store}>
+                <App state={state} dispatch={store.dispatch.bind(store)} store={store}/>
+            </Provider>
         </HashRouter>,
         document.getElementById('root')
     );
 }
-renderTree(state)
+
+renderTree(store.getState())
+
+store.subscribe(() => {
+    let state = store.getState()
+    renderTree(state)
+})
 
 

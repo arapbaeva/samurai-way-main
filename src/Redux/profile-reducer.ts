@@ -1,0 +1,54 @@
+import {ActionsTypes, PostsType, ProfilePageType} from "./store";
+
+let initialState = {
+    newPostText: '',
+    postText: '',
+    posts: [
+        {
+            id: 1,
+            message: 'Happy Monday Laura! I have good news, the shoes you inquired about are back in stock in your size. I set a pair aside for you to come pick up this week.',
+            likesCount: 12
+        },
+        {
+            id: 2,
+            message: 'You’re almost done buying your new mattress and getting the best sleep of your life! Remember to enter your payment info to select a delivery date http://sleepcushy.com/',
+            likesCount: 25
+        },
+        {
+            id: 3, message: 'Hi Joe, thank you for taking the time for a call today. ', likesCount: 17
+        }
+    ]
+}
+
+export const profileReducer = (state: typeof initialState = initialState, action: ActionsTypes): ProfilePageType => {
+
+    switch (action.type) {
+        case "ADD-POST":
+            const newPost: PostsType = {
+                id: new Date().getTime(),
+                message: state.newPostText,
+                likesCount: 0
+            }
+            state.posts.push(newPost)
+            state.newPostText = ''
+            return state;
+        case "UPDATE-ADD-POST":
+            state.newPostText = action.newPostText
+            return state;
+        default:
+            return state;
+    }
+}
+
+export const addPostAC = () => {
+    return {
+        type: "ADD-POST"
+    } as const
+}
+
+export const updatePostAC = (newPostText: string) => {
+    return {
+        type: "UPDATE-ADD-POST",
+        newPostText: newPostText
+    } as const
+}
