@@ -3,26 +3,26 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import {HashRouter} from "react-router-dom";
-import {AppRootStateType, store} from "./Redux/redux-store";
+import {store} from "./Redux/redux-store";
 import {Provider} from "react-redux";
 
 
-export const renderTree = (state: AppRootStateType) => {
+//export const renderTree = () => {
     ReactDOM.render(
         <HashRouter>
             <Provider store={store}>
-                <App state={state} dispatch={store.dispatch.bind(store)} store={store}/>
+                <App store={store}/>
             </Provider>
         </HashRouter>,
         document.getElementById('root')
     );
-}
+//}
 
-renderTree(store.getState())
+//renderTree()
 
-store.subscribe(() => {
-    let state = store.getState()
-    renderTree(state)
-})
+// store.subscribe(() => {
+//     let state = store.getState()
+//     renderTree()
+// })
 
 

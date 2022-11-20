@@ -12,12 +12,7 @@ import {AppRootStateType} from "./Redux/redux-store";
 
 
 type AppType = {
-    state: AppRootStateType
     store: any
-    dispatch: (action: ActionsTypes)=>void
-    // postText: string
-    // newPostText: string
-    // message: string
 }
 
 const App: React.FC<AppType> = (props) => {
@@ -27,7 +22,7 @@ const App: React.FC<AppType> = (props) => {
             <Navbar/>
             <div className="wrapper-content">
                 <Routes>
-                    <Route path="/profile" element={<Profile profilePage={props.state.profileReducer} dispatch={props.dispatch}/>}/>
+                    <Route path="/profile" element={<Profile store={props.store}/>}/>
                     <Route path="/dialogs"
                            element={<Dialogs store={props.store} />}/>
                 </Routes>

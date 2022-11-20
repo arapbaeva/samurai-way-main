@@ -4,35 +4,11 @@ import {Post, PostType} from "./Posts/Post";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import Avatar from "@mui/material/Avatar";
 import MediaControlCard from "../../../MaterialUI/mediaControlCard/mediaControlCard";
-import React, {ChangeEvent} from "react";
-import {ActionsTypes} from "../../../Redux/store";
-import {addPostAC, updatePostAC} from "../../../Redux/profile-reducer";
+import React from "react";
+import {PostsPropsType} from "./Posts/MyPostsContainer";
 
-type MyPostsType = {
-    posts: PostType[]
-    // addPost: ()=> void
-    // updateAddPost: (newPostText: string)=>void
-    dispatch: (action: ActionsTypes) => void
-    postText: string
-    newPostText: string
-}
-
-export const MyPosts = (props: MyPostsType) => {
-
-    // let newPostElement = React.createRef<HTMLTextAreaElement>() 32-lesson
-
-    const addPost = () => {
-   // props.addPost(props.newPostText)
-        props.dispatch(addPostAC())
-    }
-
-    const onChangeInputHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        props.dispatch(updatePostAC(e.currentTarget.value))
-        // props.dispatch({type: "UPDATE-ADD-POST", newPostText: e.currentTarget.value})
-
-    }
-
-    let arrForPosts = props.posts.map((el, index) => {
+export const MyPosts = (props: PostsPropsType) => {
+    let arrForPosts = props.posts.map((el:PostType, index) => {
         return (
             <div className={s.Posts} key={index}>
                 <Post id={el.id} message={el.message} likesCount={el.likesCount}/>
@@ -54,10 +30,10 @@ export const MyPosts = (props: MyPostsType) => {
                             multiline
                             color="success"
                             size="medium"
-                         onChange={onChangeInputHandler}
+                         onChange={props.updateAddPost}
                         />
                         <div className={s.button}>
-                            <Button variant="contained" color="success" size="small" onClick={addPost}>
+                            <Button variant="contained" color="success" size="small" onClick={props.addPost}>
                                 Add Post
                             </Button>
                         </div>
