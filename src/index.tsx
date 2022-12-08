@@ -6,8 +6,6 @@ import {HashRouter} from "react-router-dom";
 import {store} from "./Redux/redux-store";
 import {Provider} from "react-redux";
 
-
-//export const renderTree = () => {
     ReactDOM.render(
         <HashRouter>
             <Provider store={store}>
@@ -16,13 +14,5 @@ import {Provider} from "react-redux";
         </HashRouter>,
         document.getElementById('root')
     );
-//}
-
-//renderTree()
-
-// store.subscribe(() => {
-//     let state = store.getState()
-//     renderTree()
-// })
 
 

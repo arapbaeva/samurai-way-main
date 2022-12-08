@@ -28,7 +28,6 @@ const initialState = {
 export const dialogsReducer = (state: InitialStateType = initialState,action:ActionsTypes): InitialStateType => {
     switch (action.type) {
         case "ADD-MESSAGE":
-            debugger
             const newMessageText: MessageType = {
                 id: new Date().getTime(),
                 message: state.newMessageText

@@ -5,16 +5,11 @@ import {Navbar} from "./components/Navbar/Navbar";
 import {Dialogs} from "./components/Dialogs/Dialogs";
 import {Route, Routes} from "react-router-dom";
 import {Profile} from "./components/Profile/Profile";
-import {ActionsTypes, StoreType} from "./Redux/store";
-import {AppRootStateType} from "./Redux/redux-store";
-
-
-
+import UsersContainer from "./components/Users/UsersContainer";
 
 type AppType = {
     store: any
 }
-
 const App: React.FC<AppType> = (props) => {
     return (
         <div className="wrapper">
@@ -24,7 +19,9 @@ const App: React.FC<AppType> = (props) => {
                 <Routes>
                     <Route path="/profile" element={<Profile store={props.store}/>}/>
                     <Route path="/dialogs"
-                           element={<Dialogs store={props.store} />}/>
+                           element={<Dialogs store={props.store}/>}/>
+                    <Route path="/users"
+                           element={<UsersContainer/>}/>
                 </Routes>
             </div>
         </div>

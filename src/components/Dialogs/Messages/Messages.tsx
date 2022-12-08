@@ -21,6 +21,7 @@ export const Messages = (props: PostsPropsType) => {
             <div className={s.messageBlock}>
                 <div className={s.messageInput}>
                     <TextField
+                        value={props.message}
                         id="outlined-textarea"
                         label="Print message here"
                         placeholder="Placeholder"

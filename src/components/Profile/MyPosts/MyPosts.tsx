@@ -24,6 +24,7 @@ export const MyPosts = (props: PostsPropsType) => {
                     <div className={s.addPosts}>
 
                         <TextField
+                            value={props.newPostText}
                             id="outlined-textarea"
                             label="Print post here"
                             placeholder="Placeholder"

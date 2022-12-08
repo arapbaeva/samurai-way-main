@@ -21,6 +21,7 @@ export type ProfilePageType = {
     postText: string
     newPostText: string
     posts: Array<PostsType>
+    profile: number
 }
 
 export type DialogsPageType = {
@@ -54,6 +55,7 @@ export type ActionsTypes =
     | ReturnType<typeof updateMessageAC>
 
 
+
 const store: StoreType = {
     _state: {
         profilePage: {
@@ -73,7 +75,8 @@ const store: StoreType = {
                 {
                     id: 3, message: 'Hi Joe, thank you for taking the time for a call today. ', likesCount: 17
                 }
-            ]
+            ],
+            profile: 2
         },
         dialogsPage: {
             newMessageText: '',
