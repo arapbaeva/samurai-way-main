@@ -3,6 +3,8 @@ import s from "./Users.module.css";
 import userPhoto from "../../img/photo_2022-09-04_20-24-17.jpg";
 import {UserType} from "../../Redux/users-reducer";
 import {NavLink} from "react-router-dom";
+import axios from "axios";
+import {instance} from "../../api/api";
 
 type UsersType = {
     totalUsersCount: number
@@ -38,12 +40,15 @@ export const Users = (props: UsersType) => {
                                       <img className={s.img} src={el.photos.small != null ? el.photos.small : userPhoto}
                                            alt='avatar'/>
                                 </NavLink>
-
                                 <div>
                                     {el.followed ? <button className={s.button} onClick={() => {
-                                        props.unFollow(el.id)
+                                        instance.delete(`follow/${el.id}`).then(response => {
+                                            response.data.resultCode === 0 && props.unFollow(el.id)
+                                        })
                                     }}>UnFollow</button> : <button className={s.button} onClick={() => {
-                                        props.follow(el.id)
+                                        instance.post(`follow/${el.id}`, {}).then(response => {
+                                            response.data.resultCode === 0 && props.follow(el.id)
+                                        })
                                     }}>Follow</button>}
                                 </div>
                             </span>

@@ -1,8 +1,12 @@
 import React from 'react';
-import s from "../MyPosts/MyPost.module.css";
-import MediaControlCard from "../../../MaterialUI/mediaControlCard/mediaControlCard";
+import {Store} from "redux";
+import {PhotosType} from "../../../Redux/profile-reducer";
 
-export const ProfileInfo = () => {
+export type ProfileInfoType = {
+    photos: PhotosType
+}
+
+export const ProfileInfo = (props:ProfileInfoType) => {
     return (
         <>
             <div>
@@ -11,6 +15,7 @@ export const ProfileInfo = () => {
                     alt=""/>
             </div>
             <div>
+                <img src={props.photos.large} alt="photo"/>
                 ava+desc
             </div>
         </>

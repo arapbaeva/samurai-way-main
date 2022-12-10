@@ -1,17 +1,35 @@
-import {ActionsTypes, ProfilePageType} from "./store";
-
-
 export type PostsType = {
     id: number
     message: string
     likesCount: number
 }
-
+export type ProfileType = {
+    userId: number
+    lookingForAJob: boolean
+    lookingForAJobDescription: string
+    fullName: string
+    contacts: ContactsType
+    photos: PhotosType
+}
+type ContactsType = {
+    github: string
+    vk: string
+    facebook: string
+    instagram: string
+    twitter: string
+    website: string
+    youtube: string
+    mainLink: string
+}
+export type PhotosType = {
+    small: string
+    large: string
+}
 export type InitialStateType = {
     newPostText: string
     postText: string
-    posts: Array<PostsType>,
-    profile: number
+    posts: Array<PostsType>
+    profile: ProfileType
 }
 
 const initialState: InitialStateType = {
@@ -32,11 +50,32 @@ const initialState: InitialStateType = {
             id: 3, message: 'Hi Joe, thank you for taking the time for a call today. ', likesCount: 17
         }
     ],
-    profile: 2
-
+    profile: {
+        userId: 2,
+        lookingForAJob: true,
+        lookingForAJobDescription: '',
+        fullName: 'Bolot Sam',
+        contacts: {
+            github: '',
+            vk: '',
+            facebook: '',
+            instagram: '',
+            twitter: '',
+            website: '',
+            youtube: '',
+            mainLink: ''
+        },
+        photos: {
+            small: '',
+            large: ''
+        }
+    }
 }
+type ActionProfileType = ReturnType<typeof setUserProfile> | ReturnType<typeof addPostAC>
+    | ReturnType<typeof updatePostAC>
 
-export const profileReducer = (state: InitialStateType = initialState, action: ActionsTypes): InitialStateType => {
+
+export const profileReducer = (state: InitialStateType = initialState, action: ActionProfileType): InitialStateType => {
 
     switch (action.type) {
         case "ADD-POST":
@@ -45,11 +84,11 @@ export const profileReducer = (state: InitialStateType = initialState, action: A
                 message: state.newPostText,
                 likesCount: 0
             }
-                return {...state, posts: [...state.posts, newPost], newPostText: ''}
+            return {...state, posts: [...state.posts, newPost], newPostText: ''}
         case "UPDATE-ADD-POST":
             return {...state, newPostText: action.newPostText}
-        // case "SET-USE-PROFILE":
-        //     return {...state, profile: action.profile}
+        case "SET-USER-PROFILE":
+            return {...state, profile: action.profile}
         default:
             return state;
     }
@@ -67,7 +106,7 @@ export const updatePostAC = (newPostText: string) => {
         newPostText: newPostText
     } as const
 }
-export const setUserProfile = (profile: number) => {
+export const setUserProfile = (profile: ProfileType) => {
     return {
         type: "SET-USER-PROFILE",
         profile: profile

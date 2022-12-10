@@ -3,10 +3,14 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Fade from '@mui/material/Fade';
+import {NavLink} from "react-router-dom";
 
+type FadeMenuType = {
+    isAuth: boolean
+    login: string
+}
 
-
-export default function FadeMenu() {
+export default function FadeMenu(props: FadeMenuType) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -40,6 +44,7 @@ export default function FadeMenu() {
                 <MenuItem onClick={handleClose}>Profile</MenuItem>
                 <MenuItem onClick={handleClose}>My account</MenuItem>
                 <MenuItem onClick={handleClose}>Logout</MenuItem>
+                <MenuItem>{props.isAuth ? props.login : <NavLink to={'/login'}>Login</NavLink>}</MenuItem>
             </Menu>
         </div>
     );

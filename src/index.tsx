@@ -9,7 +9,7 @@ import {Provider} from "react-redux";
     ReactDOM.render(
         <HashRouter>
             <Provider store={store}>
-                <App store={store}/>
+                <App store={store} />
             </Provider>
         </HashRouter>,
         document.getElementById('root')

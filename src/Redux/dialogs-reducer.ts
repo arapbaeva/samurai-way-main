@@ -1,6 +1,3 @@
-import {ActionsTypes, DialogsPageType} from "./store";
-
-
 export type MessageType = {
     id: number
     message: string
@@ -17,15 +14,17 @@ const initialState = {
         {id: 1, name: 'Dimych'},
         {id: 2, name: 'Aiym'},
         {id: 3, name: 'Nurai'}
-    ]as Array<DialogsDataType>,
+    ] as Array<DialogsDataType>,
     messages: [
         {id: 1, message: 'Hello!'},
         {id: 2, message: 'Hi!'},
         {id: 3, message: 'What kind?'}
-    ]as Array<MessageType>
+    ] as Array<MessageType>
 }
 
-export const dialogsReducer = (state: InitialStateType = initialState,action:ActionsTypes): InitialStateType => {
+type ActionDialogsType = | ReturnType<typeof addMessageAC>
+    | ReturnType<typeof updateMessageAC>
+export const dialogsReducer = (state: InitialStateType = initialState, action: ActionDialogsType): InitialStateType => {
     switch (action.type) {
         case "ADD-MESSAGE":
             const newMessageText: MessageType = {

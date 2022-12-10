@@ -3,21 +3,25 @@ import './App.css';
 import {Header} from "./components/Header/Header";
 import {Navbar} from "./components/Navbar/Navbar";
 import {Dialogs} from "./components/Dialogs/Dialogs";
-import {Route, Routes} from "react-router-dom";
-import {Profile} from "./components/Profile/Profile";
+import {Route, Routes, useParams} from "react-router-dom";
 import UsersContainer from "./components/Users/UsersContainer";
+import {Store} from "redux";
+import ProfileContainer from "./components/Profile/ProfileContainer";
+import {ProfileContainerWithParams} from "./components/Profile/ProfileContainerWithParams";
+import HeaderContainer from "./components/Header/HeaderContainer";
 
 type AppType = {
-    store: any
+    store: Store
 }
 const App: React.FC<AppType> = (props) => {
     return (
         <div className="wrapper">
-            <Header/>
+            <HeaderContainer/>
             <Navbar/>
             <div className="wrapper-content">
                 <Routes>
-                    <Route path="/profile" element={<Profile store={props.store}/>}/>
+                    <Route path="/profile" element={<ProfileContainer/>}/>
+                    <Route path="/profile/:userId" element={<ProfileContainerWithParams />}/>
                     <Route path="/dialogs"
                            element={<Dialogs store={props.store}/>}/>
                     <Route path="/users"
@@ -28,5 +32,4 @@ const App: React.FC<AppType> = (props) => {
 
     );
 };
-
 export default App;

@@ -13,6 +13,7 @@ import React from "react";
 import axios from "axios";
 import {Users} from "./Users";
 import {Preloader} from "../../common/Preloader";
+import {getUsers} from "../../api/api";
 
 
 type MapStatePropsType = {
@@ -36,9 +37,9 @@ type UserCType = {
 class UsersContainer extends React.Component<UserCType> {
     componentDidMount() {
         this.props.setIsFetchingPreloader(true)
-        axios.get<ResponseData>(`https://social-network.samuraijs.com/api/1.0/users?page=${this.props.currentPage}&count=${this.props.pageSize}`).then(response => {
-            this.props.setUsers(response.data.items)
-            this.props.setTotalUsersCount(response.data.totalCount)
+        getUsers(this.props.currentPage,this.props.pageSize).then(data => {
+            this.props.setUsers(data.data.items)
+            this.props.setTotalUsersCount(data.data.totalCount)
             this.props.setIsFetchingPreloader(false)
         })
     }
@@ -46,8 +47,8 @@ class UsersContainer extends React.Component<UserCType> {
     onPageChanged = (pageNumber: number) => {
         this.props.setCurrentPage(pageNumber)
         this.props.setIsFetchingPreloader(true)
-        axios.get<ResponseData>(`https://social-network.samuraijs.com/api/1.0/users?page=${pageNumber}&count=${this.props.pageSize}`).then(response => {
-            this.props.setUsers(response.data.items)
+        getUsers(pageNumber,this.props.pageSize).then(data => {
+            this.props.setUsers(data.data.items)
             this.props.setIsFetchingPreloader(false)
         })
     }
