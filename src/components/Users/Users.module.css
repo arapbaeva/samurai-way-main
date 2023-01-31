@@ -24,6 +24,10 @@
     text-align: center;
     border-radius: 5px;
  }
+
+.button:disabled{
+    background-color: red;
+}
 .userDesc {
     display: flex;
     justify-content: space-around;

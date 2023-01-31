@@ -1,20 +1,16 @@
 import React from 'react';
 import {DialogItem} from "./DialogItem/DialogItem";
 import s from './Dialogs.module.css';
-// import {DialogsDataType} from "../../Redux/store";
-import {MessagesContainer} from "./Messages/Message/MessagesContainer";
-import {Store} from "redux";
+import MessagesContainer from "./Messages/Message/MessagesContainer";
+import {store} from "../../Redux/redux-store";
 
 type DialogsDataType = {
     id: number
     name: string
-}
 
-type DialogsType = {
-    store: Store
 }
-export const Dialogs = (props: DialogsType) => {
-    const state = props.store.getState().dialogsReducer
+export const Dialogs = () => {
+    const state = store.getState().dialogsReducer
     let dialogsElements = state.dialogsData.map((el:DialogsDataType) => <DialogItem key={el.id} name={el.name} id={el.id}/>)
 
     return (
@@ -22,7 +18,7 @@ export const Dialogs = (props: DialogsType) => {
             <div className={s.dialogItem}>
                 {dialogsElements}
             </div>
-          <MessagesContainer  store={props.store}/>
+          <MessagesContainer />
         </div>
     )
 }

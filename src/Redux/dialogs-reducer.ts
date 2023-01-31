@@ -23,35 +23,26 @@ const initialState = {
 }
 
 type ActionDialogsType = | ReturnType<typeof addMessageAC>
-    | ReturnType<typeof updateMessageAC>
+
 export const dialogsReducer = (state: InitialStateType = initialState, action: ActionDialogsType): InitialStateType => {
     switch (action.type) {
         case "ADD-MESSAGE":
             const newMessageText: MessageType = {
                 id: new Date().getTime(),
-                message: state.newMessageText
+                message: action.newMessageBody
             }
-            //state.messages.push(newMessageText)
-            //state.newMessageText = ''
-            return {...state, messages: [...state.messages, newMessageText], newMessageText: ''};
-        case "UPDATE-MESSAGE":
-            //state.newMessageText = action.newMessage
-            return {...state, newMessageText: action.newMessage};
+            return {...state, messages: [...state.messages, newMessageText]};
         default:
             return state
     }
 }
 
-export const addMessageAC = () => {
+export const addMessageAC = (newMessageBody: string) => {
     return {
-        type: "ADD-MESSAGE"
+        type: "ADD-MESSAGE",
+        newMessageBody: newMessageBody
     } as const
 }
-export const updateMessageAC = (newMessage: string) => {
-    return {
-        type: "UPDATE-MESSAGE",
-        newMessage: newMessage
-    } as const
-}
+
 
 //после каждого кейса нужно breakнуть кейс, но при каждом ретёрне стейта кейс автоматически брейкнется.

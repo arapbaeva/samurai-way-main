@@ -4,6 +4,8 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Fade from '@mui/material/Fade';
 import {NavLink} from "react-router-dom";
+import {setOutAuthUsersData} from "../../Redux/auth-reducer";
+import {useDispatch} from "react-redux";
 
 type FadeMenuType = {
     isAuth: boolean
@@ -12,6 +14,8 @@ type FadeMenuType = {
 
 export default function FadeMenu(props: FadeMenuType) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+    const dispatch = useDispatch()
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -43,7 +47,13 @@ export default function FadeMenu(props: FadeMenuType) {
             >
                 <MenuItem onClick={handleClose}>Profile</MenuItem>
                 <MenuItem onClick={handleClose}>My account</MenuItem>
-                <MenuItem onClick={handleClose}>Logout</MenuItem>
+                {/*/!*<MenuItem onClick={() => {*!/*/}
+                {/*//     dispatch( setOutAuthUsersData({*/}
+                {/*//             login: '',*/}
+                {/*//             id : 5,*/}
+                {/*//             email : ''*/}
+                {/*//         }))*/}
+                {/*// }}>Logout</MenuItem>*/}
                 <MenuItem>{props.isAuth ? props.login : <NavLink to={'/login'}>Login</NavLink>}</MenuItem>
             </Menu>
         </div>

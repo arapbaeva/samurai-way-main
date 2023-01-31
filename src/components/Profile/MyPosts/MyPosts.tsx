@@ -6,9 +6,18 @@ import Avatar from "@mui/material/Avatar";
 import MediaControlCard from "../../../MaterialUI/mediaControlCard/mediaControlCard";
 import React from "react";
 import {PostsPropsType} from "./Posts/MyPostsContainer";
+import {Field, reduxForm} from "redux-form";
+import {AddMessageForm, AddMessageFormType} from "../../Dialogs/Messages/AddMessageForm";
+import {AddPostFormType, AddPostsReduxForm} from "./Posts/MyPostsForm";
+import {addPostAC} from "../../../Redux/profile-reducer";
+
 
 export const MyPosts = (props: PostsPropsType) => {
-    let arrForPosts = props.posts.map((el:PostType, index) => {
+
+    const onSubmit = (values: AddPostFormType) => {
+        props.addPost(values.newPostBody)
+    }
+    let arrForPosts = props.posts.map((el: PostType, index) => {
         return (
             <div className={s.Posts} key={index}>
                 <Post id={el.id} message={el.message} likesCount={el.likesCount}/>
@@ -22,23 +31,7 @@ export const MyPosts = (props: PostsPropsType) => {
                 <div>
                     My Posts
                     <div className={s.addPosts}>
-
-                        <TextField
-                            value={props.newPostText}
-                            id="outlined-textarea"
-                            label="Print post here"
-                            placeholder="Placeholder"
-                            multiline
-                            color="success"
-                            size="medium"
-                         onChange={props.updateAddPost}
-                        />
-                        <div className={s.button}>
-                            <Button variant="contained" color="success" size="small" onClick={props.addPost}>
-                                Add Post
-                            </Button>
-                        </div>
-
+                        <AddPostsReduxForm onSubmit={onSubmit}/>
                         <div className={s.mediaControlCard}>< MediaControlCard/></div>
                     </div>
                     {arrForPosts}
@@ -54,5 +47,4 @@ export const MyPosts = (props: PostsPropsType) => {
         </>
     );
 };
-
 

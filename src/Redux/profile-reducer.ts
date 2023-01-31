@@ -1,3 +1,5 @@
+import {profileAPI, usersAPI} from "../api/api";
+
 export type PostsType = {
     id: number
     message: string
@@ -30,6 +32,7 @@ export type InitialStateType = {
     postText: string
     posts: Array<PostsType>
     profile: ProfileType
+    status: string
 }
 
 const initialState: InitialStateType = {
@@ -69,10 +72,11 @@ const initialState: InitialStateType = {
             small: '',
             large: ''
         }
-    }
+    },
+    status: ''
 }
 type ActionProfileType = ReturnType<typeof setUserProfile> | ReturnType<typeof addPostAC>
-    | ReturnType<typeof updatePostAC>
+    | ReturnType<typeof updatePostAC> | ReturnType<typeof setStatus>
 
 
 export const profileReducer = (state: InitialStateType = initialState, action: ActionProfileType): InitialStateType => {
@@ -81,22 +85,23 @@ export const profileReducer = (state: InitialStateType = initialState, action: A
         case "ADD-POST":
             const newPost: PostsType = {
                 id: new Date().getTime(),
-                message: state.newPostText,
+                message: action.addPostBody,
                 likesCount: 0
             }
-            return {...state, posts: [...state.posts, newPost], newPostText: ''}
-        case "UPDATE-ADD-POST":
-            return {...state, newPostText: action.newPostText}
+            return {...state, posts: [...state.posts, newPost]}
         case "SET-USER-PROFILE":
             return {...state, profile: action.profile}
+        case "SET-STATUS":
+            return {...state, status: action.status}
         default:
             return state;
     }
 }
 
-export const addPostAC = () => {
+export const addPostAC = (addPostBody:string) => {
     return {
-        type: "ADD-POST"
+        type: "ADD-POST",
+        addPostBody: addPostBody
     } as const
 }
 
@@ -111,4 +116,38 @@ export const setUserProfile = (profile: ProfileType) => {
         type: "SET-USER-PROFILE",
         profile: profile
     } as const
+}
+
+export const setStatus = (status: string) => {
+    return {
+        type: "SET-STATUS",
+        status: status
+    } as const
+}
+
+export const getUserProfileThunkCreator = (userId: string) => {
+    return (dispatch: any) => {
+        usersAPI.getUserProfile(userId).then(response => {
+           dispatch(setUserProfile(response.data))
+        })
+    }
+}
+
+export const getStatusThunkCreator = (userId: string) => {
+    return (dispatch: any) => {
+        profileAPI.getStatus(userId).then(response => {
+            dispatch(setStatus(response.data))
+        })
+    }
+}
+
+export const updateStatusThunkCreator = (status: string) => {
+    return (dispatch: any) => {
+        profileAPI.updateStatus(status).then(response => {
+            if(response.data.resultCode === 0){
+                dispatch(setStatus(status))
+            }
+
+        })
+    }
 }

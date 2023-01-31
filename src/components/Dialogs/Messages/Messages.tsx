@@ -1,10 +1,15 @@
 import React from 'react';
 import s from "../Dialogs.module.css";
-import {Button, TextField} from "@mui/material";
 import {Message} from "./Message/Message";
 import {PostsPropsType} from "./Message/MessagesContainer";
+import {AddMessageFormType, AddMessageReduxForm} from "./AddMessageForm";
 
 export const Messages = (props: PostsPropsType) => {
+
+    const onSubmit = (values: AddMessageFormType) => {
+        props.addMessage(values.newMessageBody)
+    }
+
     let messageElements = props.messages.map((el, index) => {
         return (
             <div key={index}>
@@ -16,29 +21,17 @@ export const Messages = (props: PostsPropsType) => {
         <div>
             <div className={s.message}>
                 {messageElements}
-
             </div>
             <div className={s.messageBlock}>
                 <div className={s.messageInput}>
-                    <TextField
-                        value={props.message}
-                        id="outlined-textarea"
-                        label="Print message here"
-                        placeholder="Placeholder"
-                        multiline
-                        color="success"
-                        size="medium"
-                        onChange={props.updateMessage}
-                    />
-                </div>
-                <div className={s.messageButton}>
-                    <Button variant="contained" color="success" size="small" onClick={props.addMessage}>
-                        send message
-                    </Button>
+                 <AddMessageReduxForm onSubmit={onSubmit} />
                 </div>
             </div>
         </div>
     )
 }
+
+
+
 
 

@@ -1,19 +1,18 @@
 import {connect} from "react-redux";
 import {AppRootStateType} from "../../Redux/redux-store";
 import {
-    follow,
+    follow, followThunkCreator,
+    getUsersThunkCreator,
     setCurrentPage,
-    setIsFetchingPreloader,
-    setTotalUsersCount,
-    setUsers,
-    unFollow,
+    setIsFollowingDisabled,
+    unFollow, unFollowThunkCreator,
     UserType
 } from "../../Redux/users-reducer";
 import React from "react";
-import axios from "axios";
 import {Users} from "./Users";
 import {Preloader} from "../../common/Preloader";
-import {getUsers} from "../../api/api";
+import {compose} from "redux";
+import {WithAuthRedirect} from "../../hoc/withAuthRedirect";
 
 
 type MapStatePropsType = {
@@ -22,6 +21,7 @@ type MapStatePropsType = {
     totalUsersCount: number
     currentPage: number
     isFetching: boolean
+    followingInProgress:boolean
 }
 type ResponseData = {
     items: UserType[]
@@ -31,26 +31,18 @@ type ResponseData = {
 }
 type UserCType = {
     users: UserType[], pageSize: number
-    totalUsersCount: number, currentPage: number, setUsers: (items: UserType[]) => void, unFollow: (userId: number) => void, follow: (userId: number) => void, setCurrentPage: (currentPage: number) => void, setTotalUsersCount: (totalCount: number) => void, isFetching: boolean, setIsFetchingPreloader: (isFetching: boolean) => void
+    totalUsersCount: number, currentPage: number, unFollow: (userId: number) => void, follow: (userId: number) => void, setCurrentPage: (currentPage: number) => void,  isFetching: boolean, setIsFollowingDisabled: (isFetching: boolean)=>void, followingInProgress: boolean, getUsersThunkCreator: (currentPage: number, pageSize: number) => void,  unFollowThunkCreator: (userId: number) => void,
+    followThunkCreator: (userId: number) => void
 }
 
 class UsersContainer extends React.Component<UserCType> {
     componentDidMount() {
-        this.props.setIsFetchingPreloader(true)
-        getUsers(this.props.currentPage,this.props.pageSize).then(data => {
-            this.props.setUsers(data.data.items)
-            this.props.setTotalUsersCount(data.data.totalCount)
-            this.props.setIsFetchingPreloader(false)
-        })
+        this.props.getUsersThunkCreator(this.props.currentPage, this.props.pageSize )
     }
 
     onPageChanged = (pageNumber: number) => {
         this.props.setCurrentPage(pageNumber)
-        this.props.setIsFetchingPreloader(true)
-        getUsers(pageNumber,this.props.pageSize).then(data => {
-            this.props.setUsers(data.data.items)
-            this.props.setIsFetchingPreloader(false)
-        })
+        this.props.getUsersThunkCreator(pageNumber, this.props.pageSize)
     }
 
     render() {
@@ -58,26 +50,36 @@ class UsersContainer extends React.Component<UserCType> {
             {this.props.isFetching ? <Preloader/> : null}
             <Users users={this.props.users} totalUsersCount={this.props.totalUsersCount}
                    currentPage={this.props.currentPage} pageSize={this.props.pageSize}
-                   onPageChanged={this.onPageChanged} follow={this.props.follow} unFollow={this.props.unFollow}/>
+                   onPageChanged={this.onPageChanged} follow={this.props.follow} unFollow={this.props.unFollow}  followingInProgress={this.props.followingInProgress}  unFollowThunkCreator={this.props.unFollowThunkCreator} followThunkCreator={this.props.followThunkCreator}/>
         </>
     }
 }
-
 const MapStateToProps = (state: AppRootStateType): MapStatePropsType => {
     return {
         users: state.usersReducer.users,
         pageSize: state.usersReducer.pageSize,
         totalUsersCount: state.usersReducer.totalUsersCount,
         currentPage: state.usersReducer.currentPage,
-        isFetching: state.usersReducer.isFetching
+        isFetching: state.usersReducer.isFetching,
+        followingInProgress: state.usersReducer.followingInProgress,
     }
 }
-export default connect(MapStateToProps, {
+// export default connect(MapStateToProps, {
+//     follow,
+//     unFollow,
+//     setCurrentPage,
+//     setIsFollowingDisabled,
+//     getUsersThunkCreator,
+//     unFollowThunkCreator,
+//     followThunkCreator
+// })(UsersContainer)
+
+export default compose<React.ComponentType>(connect(MapStateToProps, {
     follow,
     unFollow,
-    setUsers,
     setCurrentPage,
-    setTotalUsersCount,
-    setIsFetchingPreloader
-})(UsersContainer)
-
+    setIsFollowingDisabled,
+    getUsersThunkCreator,
+    unFollowThunkCreator,
+    followThunkCreator
+}),WithAuthRedirect)(UsersContainer)

@@ -1,3 +1,5 @@
+import {usersAPI} from "../api/api";
+
 export type AuthType = {
    data: DataType
     resultCode: number
@@ -38,6 +40,12 @@ export const authReducer = (state: InitialStateType = initialState, action: any)
                     ...action.data,
                     isAuth: true
                 }
+            case "SET-OUT-AUTH-USER-DATA":
+                return {
+                    ...state,
+                    ...action.data,
+                    isAuth: false
+                }
             default:
                 return state;
         }
@@ -48,7 +56,26 @@ export const setAuthUsersData = (data: DataType) => {
         type: "SET-AUTH-USER-DATA",
         data: data
     }as const
+}
 
+// setOutAuthUsersData({
+//     login: '',
+//     id : 5,
+//     email : ''
+// })
+export const setOutAuthUsersData = (data: DataType) => {
+    return {
+        type: "SET-OUT-AUTH-USER-DATA",
+        data: data
+    }as const
+}
+
+export const getAuthUsersThunkCreator = () => {
+    return (dispatch: any) => {
+        usersAPI.getAuthUsers().then(response => {
+            response.data.resultCode === 0 && dispatch(setAuthUsersData(response.data.data))
+        })
+    }
 }
 
 

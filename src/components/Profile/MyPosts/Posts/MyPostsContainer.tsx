@@ -11,13 +11,12 @@ type MapStatePropsType = {
     newPostText: string
 }
 type MapDispatchPropsType = {
-    addPost: ()=>void
-    updateAddPost: (e: ChangeEvent<HTMLTextAreaElement>)=> void
+    addPost: (newPostBody: string)=>void
 }
 export type PostsPropsType = MapStatePropsType & MapDispatchPropsType
 
 
-const mapStateToProps = (state: AppRootStateType):MapStatePropsType => {
+const MapStateToProps = (state: AppRootStateType):MapStatePropsType => {
     return {
         posts: state.profileReducer.posts,
         postText: state.profileReducer.postText,
@@ -26,17 +25,16 @@ const mapStateToProps = (state: AppRootStateType):MapStatePropsType => {
 }
 
 
-const mapDispatchToProps = (dispatch: Dispatch):MapDispatchPropsType => {
+const MapDispatchToProps = (dispatch: Dispatch):MapDispatchPropsType => {
     return {
-        addPost: () => {
-            dispatch(addPostAC())
-        },
-        updateAddPost: (e: ChangeEvent<HTMLTextAreaElement>) => {
-         dispatch(updatePostAC(e.currentTarget.value))
+        addPost: (newPostBody:string) => {
+            dispatch(addPostAC(newPostBody))
         }
     }
 }
 
-export const MyPostsContainer = connect(mapStateToProps, mapDispatchToProps)(MyPosts)
+export const MyPostsContainer = connect(MapStateToProps, MapDispatchToProps)(MyPosts)
+
+
 
 

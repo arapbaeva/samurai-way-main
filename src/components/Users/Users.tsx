@@ -1,19 +1,20 @@
 import React from "react";
 import s from "./Users.module.css";
 import userPhoto from "../../img/photo_2022-09-04_20-24-17.jpg";
-import {UserType} from "../../Redux/users-reducer";
+import {followThunkCreator, unFollowThunkCreator, UserType} from "../../Redux/users-reducer";
 import {NavLink} from "react-router-dom";
-import axios from "axios";
-import {instance} from "../../api/api";
 
 type UsersType = {
     totalUsersCount: number
     pageSize: number
     onPageChanged: (p: number) => void
     currentPage: number
-    unFollow: (userId: number) => void,
+    unFollow: (userId: number) => void
     follow: (userId: number) => void
     users: UserType[]
+    followingInProgress: boolean
+    unFollowThunkCreator: (userId: number) => void
+    followThunkCreator: (userId: number) => void
 }
 export const Users = (props: UsersType) => {
     let pagesCount = Math.ceil(props.totalUsersCount / props.pageSize)
@@ -41,14 +42,9 @@ export const Users = (props: UsersType) => {
                                            alt='avatar'/>
                                 </NavLink>
                                 <div>
-                                    {el.followed ? <button className={s.button} onClick={() => {
-                                        instance.delete(`follow/${el.id}`).then(response => {
-                                            response.data.resultCode === 0 && props.unFollow(el.id)
-                                        })
-                                    }}>UnFollow</button> : <button className={s.button} onClick={() => {
-                                        instance.post(`follow/${el.id}`, {}).then(response => {
-                                            response.data.resultCode === 0 && props.follow(el.id)
-                                        })
+                                    {el.followed ? <button disabled={props.followingInProgress} className={s.button} onClick={() => {
+                                        props.unFollowThunkCreator(el.id)}}>UnFollow</button>
+                                        : <button disabled={props.followingInProgress} className={s.button} onClick={() => {props.followThunkCreator(el.id)
                                     }}>Follow</button>}
                                 </div>
                             </span>
