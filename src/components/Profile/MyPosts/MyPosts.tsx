@@ -1,15 +1,11 @@
 import s from "./MyPost.module.css";
-import {Button, TextField} from "@mui/material";
 import {Post, PostType} from "./Posts/Post";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import Avatar from "@mui/material/Avatar";
 import MediaControlCard from "../../../MaterialUI/mediaControlCard/mediaControlCard";
 import React from "react";
 import {PostsPropsType} from "./Posts/MyPostsContainer";
-import {Field, reduxForm} from "redux-form";
-import {AddMessageForm, AddMessageFormType} from "../../Dialogs/Messages/AddMessageForm";
 import {AddPostFormType, AddPostsReduxForm} from "./Posts/MyPostsForm";
-import {addPostAC} from "../../../Redux/profile-reducer";
 
 
 export const MyPosts = (props: PostsPropsType) => {
