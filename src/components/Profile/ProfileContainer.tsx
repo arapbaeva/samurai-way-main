@@ -11,6 +11,7 @@ import {AppRootStateType} from "../../Redux/redux-store";
 import {compose} from "redux";
 import {WithAuthRedirect} from "../../hoc/withAuthRedirect";
 import {withRouter} from "./ProfileContainerWithParams";
+import {Navigate, useNavigate} from "react-router-dom";
 
 
 type ProfileCType = {
@@ -22,14 +23,31 @@ type ProfileCType = {
     isAuth: boolean
     status: string
     userId: string
+    authorizedUserId: string
 
 }
 
 class ProfileContainer extends React.Component<ProfileCType> {
+
+     navigate = () => {
+         const navigate = useNavigate();
+         navigate('/login');
+    }
+
+    shouldComponentUpdate(nextProps: Readonly<ProfileCType>, nextState: Readonly<{}>, nextContext: any): boolean {
+        console.log('authUserId', this.props.authorizedUserId)
+        console.log('nextauthUserId', nextProps.authorizedUserId)
+        return false
+    }
+
     componentDidMount() {
+        console.log('authUserId', this.props.authorizedUserId)
         let userId = this.props.params.userId
         if(!userId) {
-            userId = '2'
+            userId = this.props.authorizedUserId;
+            if (!userId) {
+               this.navigate()
+            }
         }
         this.props.getUserProfileThunkCreator(userId)
         this.props.getStatusThunkCreator(userId)
@@ -45,18 +63,16 @@ type MapStateToPropsType = {
     profile: ProfileType
     isAuth: boolean
     status: string
+    authorizedUserId: string |  number
   }
 let MapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
     profile: state.profileReducer.profile,
     isAuth: state.auth.isAuth,
     status: state.profileReducer.status,
+    authorizedUserId: state.auth.id
 })
 
 
-// (a: number) => 'hello ' + a
-//     (a: number) => ReactElement
-//
-// /*export default withRouter(connect(MapStateToProps, {getUserProfileThunkCreator})(AuthRedirectComponent));*/
 
 export default compose<React.ComponentType>(connect(MapStateToProps, {
     getUserProfileThunkCreator,

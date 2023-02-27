@@ -5,7 +5,6 @@ import {MyPostsContainer} from "./MyPosts/Posts/MyPostsContainer";
 import {PhotosType} from "../../Redux/profile-reducer";
 
 
-
 type ProfilePropsType = {
     updateStatusThunkCreator: (status: string)=>void
     status: string
@@ -15,6 +14,10 @@ type ProfilePropsType = {
 }
 export const Profile = (props: ProfilePropsType) => {
     // if (!props.isAuth) return  <Navigate replace to="/login" />
+    // const {userId} = useParams<'userId'>()
+    // const navigate = useNavigate()
+    // if (!userId) navigate('/login')
+
     return <>
         <div className={s.content}>
             <ProfileInfo photos={props.photos} status={props.status} updateStatusThunkCreator={props.updateStatusThunkCreator} />

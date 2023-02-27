@@ -25,33 +25,18 @@ export const usersAPI = {
     },
     getAuthUsers() {
          return instance.get(`auth/me`)
-        // {withCredentials: true}).then(response => {
-        //     response.data.resultCode === 0 && this.props.setAuthUsersData(response.data.data)
-        //     console.log('data' + response.data.data.login)
-        // })
+    },
+    login(email:string, password:string, rememberMe:boolean){
+        return instance.post(`auth/login`, {email, password, rememberMe})
+    },
+    logOut(){
+        return instance.delete(`auth/login`)
     },
     getUserProfile(userId: string){
        console.warn("Obsolete method. Please use profileAPI object")
         return profileAPI.getUserProfile(userId)
     }
 }
-// type StatusMessagesType = {
-//     messages: string
-// }
-
-
-// export type StatusType = {
-//     resultCode: number //1
-//     messages: Array<StatusMessagesType>    //['Something wrong'],
-//     data: object   // {}
-// }
-
-// const status: StatusType = {
-//     resultCode: 1,
-//     messages: [],
-//     data: {}
-// }
-
 export const profileAPI = {
     getUserProfile(userId: string){
         return instance.get(`profile/${userId ? userId : '2'}`)

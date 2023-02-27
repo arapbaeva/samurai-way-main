@@ -1,12 +1,13 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {Input} from "../../common/FormControls";
 import {required} from "../../Utils/validators/validators";
+import  style from "../../common/FormControls.module.css"
 
 export type FormDataType = {
-    login: string
+    email: string
     password: string
-    checkbox: boolean
+    rememberMe: boolean
 }
 
 export const LoginForm: React.FC<InjectedFormProps<FormDataType>> = (props) => {
@@ -14,11 +15,14 @@ export const LoginForm: React.FC<InjectedFormProps<FormDataType>> = (props) => {
         <div>
             <h1>Login</h1>
             <form onSubmit={props.handleSubmit}>
-                <div><Field validate={[required]} placeholder={'Login'} name={"login"} component={Input}/></div>
-                <div><Field validate={[required]} placeholder={'Password'} name={"password"} component={Input}/></div>
+                <div><Field validate={[required]} placeholder={'Email'} name={"email"} component={Input}/></div>
+                <div><Field validate={[required]} placeholder={'Password'} name={"password"} type={"password"} component={Input}/></div>
                 <div><Field type={"checkbox"} name={"rememberMe"} component={Input}/></div>
                 remember me
                 <div>
+                    {props.error && <div className={style.formSummaryError}>
+                        {props.error}
+                    </div>}
                     <button>Login</button>
                 </div>
             </form>

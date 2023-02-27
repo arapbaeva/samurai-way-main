@@ -21,6 +21,7 @@ export type InitialStateType = {
     totalUsersCount: number
     currentPage: number
     isFetching: boolean
+    followed: number[]
     followingInProgress: boolean
 }
 
@@ -30,6 +31,7 @@ const initialState: InitialStateType = {
     totalUsersCount: 0,
     currentPage: 1,
     isFetching: true,
+    followed: [],
     followingInProgress: false
 }
 
@@ -43,7 +45,7 @@ export const usersReducer = (state: InitialStateType = initialState, action: any
                         return {...el, followed: true}
                     }
                     return el
-                })
+                }),
             }
         case "UNFOLLOW":
             return {
@@ -53,7 +55,7 @@ export const usersReducer = (state: InitialStateType = initialState, action: any
                         return {...el, followed: false}
                     }
                     return el
-                })
+                }),
             }
         case "SET-USERS":
             return {
@@ -73,7 +75,10 @@ export const usersReducer = (state: InitialStateType = initialState, action: any
             }
         case "IS_FOLLOWING_DISABLED":
             return {
-                ...state, followingInProgress: action.isFetching
+                ...state, followingInProgress: action.isFetching,
+                followed: action.isFetching
+                    ? [...state.followed, action.userId]
+                    : state.followed.filter((id) => id !== action.userId)
             }
         default:
             return state;
@@ -116,10 +121,11 @@ export const setIsFetchingPreloader = (isFetching: boolean) => {
         isFetching: isFetching
     } as const
 }
-export const setIsFollowingDisabled = (isFetching: boolean) => {
+export const setIsFollowingDisabled = (isFetching: boolean, userId: number) => {
     return {
         type: "IS_FOLLOWING_DISABLED",
-        isFetching
+        isFetching,
+        userId
     } as const
 }
 
@@ -136,20 +142,20 @@ export const getUsersThunkCreator = (currentPage: number, pageSize: number) => {
 
 export const followThunkCreator = (userId: number) => {
     return (dispatch: any) => {
-        dispatch(setIsFollowingDisabled(true))
+        dispatch(setIsFollowingDisabled(true, userId))
         usersAPI.follow(userId).then(response => {
             response.data.resultCode === 0 && dispatch(follow(userId))
-            dispatch(setIsFollowingDisabled(false))
+            dispatch(setIsFollowingDisabled(false, userId))
         })
     }
 }
 export const unFollowThunkCreator = (userId: number) => {
     return (dispatch: any) => {
-        dispatch(setIsFollowingDisabled(true))
+        dispatch(setIsFollowingDisabled(true, userId))
         usersAPI.unFollow(userId)
             .then(response => {
                 response.data.resultCode === 0 && dispatch(unFollow(userId))
-                dispatch(setIsFollowingDisabled(false))
+                dispatch(setIsFollowingDisabled(false, userId))
             })
     }
 }

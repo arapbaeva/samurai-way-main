@@ -10,15 +10,6 @@ type MapPropsType = {
 }
 type DispatchPropsType = {}
 
-// export const WithAuthRedirect = () => {
-//       class RedirectComponent extends React.Component {
-//           render() {
-//               if (!this.props.isAuth) return  <Navigate replace to="/login" />
-//               return <Component {...this.props}/>
-//           }
-//       }
-// };
-
 export function WithAuthRedirect<WCP>(WrapperComponent: React.ComponentType<WCP>) {
 
     const RedirectComponent: FC<MapPropsType & DispatchPropsType> = (props) => {

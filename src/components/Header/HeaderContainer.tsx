@@ -1,29 +1,21 @@
-import React from "react";
-import axios from "axios";
+import React, {MouseEventHandler} from "react";
 import {Header} from "./Header";
-import {AuthType, DataType, getAuthUsersThunkCreator, setAuthUsersData} from "../../Redux/auth-reducer";
+import {getAuthUsersThunkCreator, logOut} from "../../Redux/auth-reducer";
 import {AppRootStateType} from "../../Redux/redux-store";
 import {connect} from "react-redux";
-import {usersAPI} from "../../api/api";
-
 
 
 type HeaderCType = {
-    // setAuthUsersData: (data: DataType) => void
     isAuth: boolean
     login: string
-    getAuthUsersThunkCreator: ()=>void
+    logOut: MouseEventHandler<HTMLButtonElement> | undefined
 }
 
 class HeaderContainer extends React.Component<HeaderCType> {
-    componentDidMount() {
-       this.props.getAuthUsersThunkCreator()
-        }
-
 
     render() {
         return <>
-            <Header isAuth={this.props.isAuth} login={this.props.login} getAuthUsersThunkCreator={this.props.getAuthUsersThunkCreator}/>
+            <Header isAuth={this.props.isAuth} login={this.props.login} logOut={this.props.logOut} />
         </>
     }
 }
@@ -31,10 +23,12 @@ class HeaderContainer extends React.Component<HeaderCType> {
 type MapStateToPropsType = {
     isAuth: boolean
     login: string
+    logOut:string
 }
 let MapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
     isAuth: state.auth.isAuth,
-    login: state.auth.login
+    login: state.auth.login,
+    logOut: state.auth.logOut
 })
 
-export default connect(MapStateToProps, {getAuthUsersThunkCreator})(HeaderContainer);
+export default connect(MapStateToProps, {logOut})(HeaderContainer);

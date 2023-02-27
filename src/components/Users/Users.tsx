@@ -1,7 +1,7 @@
 import React from "react";
 import s from "./Users.module.css";
 import userPhoto from "../../img/photo_2022-09-04_20-24-17.jpg";
-import {followThunkCreator, unFollowThunkCreator, UserType} from "../../Redux/users-reducer";
+import {UserType} from "../../Redux/users-reducer";
 import {NavLink} from "react-router-dom";
 
 type UsersType = {
@@ -11,6 +11,7 @@ type UsersType = {
     currentPage: number
     unFollow: (userId: number) => void
     follow: (userId: number) => void
+    followed: number[]
     users: UserType[]
     followingInProgress: boolean
     unFollowThunkCreator: (userId: number) => void
@@ -22,6 +23,7 @@ export const Users = (props: UsersType) => {
     for (let i = 1; i <= pagesCount / 100; i++) {
         pages.push(i)
     }
+
     return (
         <>
             <div>
@@ -42,9 +44,10 @@ export const Users = (props: UsersType) => {
                                            alt='avatar'/>
                                 </NavLink>
                                 <div>
-                                    {el.followed ? <button disabled={props.followingInProgress} className={s.button} onClick={() => {
+                                    {el.followed ?
+                                        <button disabled={props.followed.some((id) => id === el.id)} className={s.button} onClick={() => {
                                         props.unFollowThunkCreator(el.id)}}>UnFollow</button>
-                                        : <button disabled={props.followingInProgress} className={s.button} onClick={() => {props.followThunkCreator(el.id)
+                                        : <button disabled={props.followed.some((id) => id === el.id)} className={s.button} onClick={() => {props.followThunkCreator(el.id)
                                     }}>Follow</button>}
                                 </div>
                             </span>
