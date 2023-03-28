@@ -18,7 +18,6 @@ const Login = (props: {login:(email: string, password:string, rememberMe: boolea
     }
 
     if (props.isAuth) return <Navigate replace to={'/profile'}/>
-
     return (
         <div>
             <LoginReduxForm onSubmit={onSubmit}/>

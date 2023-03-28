@@ -8,7 +8,7 @@ import {PostsPropsType} from "./Posts/MyPostsContainer";
 import {AddPostFormType, AddPostsReduxForm} from "./Posts/MyPostsForm";
 
 
-export const MyPosts = (props: PostsPropsType) => {
+export const MyPosts = React.memo((props: PostsPropsType) => {
 
     const onSubmit = (values: AddPostFormType) => {
         props.addPost(values.newPostBody)
@@ -16,6 +16,7 @@ export const MyPosts = (props: PostsPropsType) => {
     let arrForPosts = props.posts.map((el: PostType, index) => {
         return (
             <div className={s.Posts} key={index}>
+
                 <Post id={el.id} message={el.message} likesCount={el.likesCount}/>
             </div>
         )
@@ -42,5 +43,5 @@ export const MyPosts = (props: PostsPropsType) => {
             </div>
         </>
     );
-};
+});
 

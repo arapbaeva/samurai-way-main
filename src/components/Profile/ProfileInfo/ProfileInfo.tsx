@@ -2,6 +2,7 @@ import React from 'react';
 import {PhotosType} from "../../../Redux/profile-reducer";
 import s from './ProfileInfo.module.css';
 import {ProfileStatus} from "./ProfileStatus";
+import {ProfileStatusWithHooks} from "./ProfileStatusWithHooks";
 
 
 export type ProfileInfoType = {
@@ -20,7 +21,9 @@ export const ProfileInfo = (props:ProfileInfoType) => {
             {/*</div>*/}
             <div className={s.ava}>
                 <img src={props.photos.large} alt="photo"/>
-                <ProfileStatus  status={props.status} updateStatusThunkCreator={props.updateStatusThunkCreator} />
+                {/*<ProfileStatus  status={props.status} updateStatusThunkCreator={props.updateStatusThunkCreator} />*/}
+
+                <ProfileStatusWithHooks status={props.status} updateStatusThunkCreator={props.updateStatusThunkCreator}/>
             </div>
         </>
     );
