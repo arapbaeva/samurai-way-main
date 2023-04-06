@@ -1,8 +1,8 @@
 import React, {MouseEventHandler} from "react";
 import {Header} from "./Header";
-import {getAuthUsersThunkCreator, logOut} from "../../Redux/auth-reducer";
-import {AppRootStateType} from "../../Redux/redux-store";
 import {connect} from "react-redux";
+import {AppRootStateType} from "src/Redux/redux-store";
+import {logOut} from "src/Redux/auth-reducer";
 
 
 type HeaderCType = {
@@ -11,11 +11,11 @@ type HeaderCType = {
     logOut: MouseEventHandler<HTMLButtonElement> | undefined
 }
 
-class HeaderContainer extends React.Component<HeaderCType> {
+class HeaderContainer extends React.Component<HeaderProps> {
 
     render() {
         return <>
-            <Header isAuth={this.props.isAuth} login={this.props.login} logOut={this.props.logOut} />
+            {/*<Header isAuth={this.props.isAuth} login={this.props.login} logOut={this.props.logOut} />*/}
         </>
     }
 }
@@ -25,10 +25,18 @@ type MapStateToPropsType = {
     login: string
     logOut:string
 }
-let MapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
-    isAuth: state.auth.isAuth,
-    login: state.auth.login,
-    logOut: state.auth.logOut
-})
+let MapStateToProps = (state: AppRootStateType): MapStateToPropsType => {
+    debugger
+    return {
+        isAuth: state.auth.isAuth,
+        login: state.auth.auth.data.login,
+        logOut: state.auth.auth.data.logout
+    }
+}
+// const MapStateToProps = (state: AppRootStateType) => ({
+//     isAuth: state.auth
+// })
+
+export type HeaderProps = ReturnType<typeof MapStateToProps> & { logOut: () => void}
 
 export default connect(MapStateToProps, {logOut})(HeaderContainer);

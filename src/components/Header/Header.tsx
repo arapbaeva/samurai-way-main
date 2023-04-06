@@ -1,6 +1,7 @@
 import React, {MouseEventHandler} from 'react';
 import s from './Header.module.css'
 import FadeMenu from "../../MaterialUI/Dashboard/DashBoard";
+import {HeaderProps} from "src/components/Header/HeaderContainer";
 
 
 type HeaderType = {
@@ -8,7 +9,8 @@ type HeaderType = {
     login: string
     logOut: MouseEventHandler<HTMLButtonElement> | undefined
 }
-export const Header = (props: HeaderType) => {
+export const Header = (props: HeaderProps) => {
+    console.log(props)
     return (
         <>
             <header className={s.header}>

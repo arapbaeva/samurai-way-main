@@ -1,9 +1,10 @@
 import {usersAPI} from "../api/api";
-import {Dispatch} from "redux";
 import {stopSubmit} from "redux-form";
+import {AppThunk} from "src/Redux/redux-store";
+
 
 export type AuthType = {
-    data: DataType | null
+    data: DataType
     resultCode: number
     messages: Array<MessagesType>
 
@@ -11,22 +12,26 @@ export type AuthType = {
 type MessagesType = {
     messages: ''
 }
+
 export type DataType = {
     id: number | string,
     email: string,
     login: string,
+    logout: string,
 }
 export type InitialStateType = {
     auth: AuthType
     isAuth: boolean
 }
 
+
 const initialState: InitialStateType = {
     auth: {
         data: {
             id: '25859',
             email: '',
-            login: ''
+            login: '',
+            logout: ''
         },
         resultCode: 5,
         messages: []
@@ -34,7 +39,7 @@ const initialState: InitialStateType = {
     isAuth: false
 }
 
-export const authReducer = (state: InitialStateType = initialState, action: any) => {
+export const authReducer = (state: InitialStateType = initialState, action: ActionsType) => {
     switch (action.type) {
         case "SET-AUTH-USER-DATA":
             console.log('from reducer ', action.data)
@@ -57,6 +62,8 @@ export const authReducer = (state: InitialStateType = initialState, action: any)
     }
 }
 
+
+//AC
 export const setAuthUsersData = (data: DataType | null, isAuth: boolean) => {
     return {
         type: "SET-AUTH-USER-DATA",
@@ -73,31 +80,27 @@ export const setOutAuthUsersData = (data: DataType | null, isAuth: boolean) => {
     } as const
 }
 
-export const getAuthUsersThunkCreator = () => {
-    return (dispatch: any) => {
-        usersAPI.getAuthUsers().then(response => {
-            console.log('from auth ', response.data.data)
-            response.data.resultCode === 0 && dispatch(setAuthUsersData(response.data.data, true))
-        })
-        return 'it-incubator'
+//thunk
+export const getAuthUsersThunkCreator = ():AppThunk => async (dispatch) => {
+    let response = await usersAPI.getAuthUsers();
+    if (response.data.resultCode === 0) {
+        dispatch(setAuthUsersData(response.data.data, true))
     }
 }
 
-export const login = (email: string, password: string, rememberMe: boolean) => {
-    return (dispatch: any) => {
-        usersAPI.login(email, password, rememberMe).then(response => {
-            if (response.data.resultCode === 0) {
-                dispatch(getAuthUsersThunkCreator())
-            } else {
-                let message = response.data.messages.length > 0 ? response.data.messages[0] : "Some error"
-                dispatch(stopSubmit('login', {_error: message}))
-            }
-        })
+export const login = (email: string, password: string, rememberMe: boolean):AppThunk => async (dispatch) => {
+    let response = await usersAPI.login(email, password, rememberMe)
+    if (response.data.resultCode === 0) {
+        dispatch(getAuthUsersThunkCreator())
+    } else {
+        let message = response.data.messages.length > 0 ? response.data.messages[0] : "Some error"
+        dispatch(stopSubmit('login', {_error: message}))
     }
 }
 
-export const logOut = () => {
-    return (dispatch: Dispatch) => {
+
+export const logOut = ():AppThunk => {
+    return (dispatch) => {
         usersAPI.logOut().then(response => {
             if (response.data.resultCode === 0) {
                 dispatch(setOutAuthUsersData(null, false))
@@ -105,6 +108,10 @@ export const logOut = () => {
         })
     }
 }
+
+
+type ActionsType = ReturnType<typeof setAuthUsersData> | ReturnType<typeof setOutAuthUsersData>
+
 
 
 

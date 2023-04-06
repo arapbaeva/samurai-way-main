@@ -69,7 +69,7 @@ let MapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
     profile: state.profileReducer.profile,
     isAuth: state.auth.isAuth,
     status: state.profileReducer.status,
-    authorizedUserId: state.auth.id
+    authorizedUserId: state.auth.auth.data.id
 })
 
 
