@@ -147,7 +147,6 @@ export const updateStatusThunkCreator = (status: string) => {
             if(response.data.resultCode === 0){
                 dispatch(setStatus(status))
             }
-
         })
     }
 }
