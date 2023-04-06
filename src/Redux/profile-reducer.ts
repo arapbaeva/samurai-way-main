@@ -1,4 +1,5 @@
 import {profileAPI, usersAPI} from "../api/api";
+import {AppThunk} from "src/Redux/redux-store";
 
 export type PostsType = {
     id: number
@@ -98,7 +99,7 @@ export const profileReducer = (state: InitialStateType = initialState, action: A
     }
 }
 
-export const addPostAC = (addPostBody:string) => {
+export const addPostAC = (addPostBody: string) => {
     return {
         type: "ADD-POST",
         addPostBody: addPostBody
@@ -125,28 +126,22 @@ export const setStatus = (status: string) => {
     } as const
 }
 
-export const getUserProfileThunkCreator = (userId: string) => {
-    return (dispatch: any) => {
-        usersAPI.getUserProfile(userId).then(response => {
-           dispatch(setUserProfile(response.data))
-        })
+export const getUserProfileThunkCreator = (userId: string): AppThunk => async dispatch => {
+    let res = await usersAPI.getUserProfile(userId)
+    dispatch(setUserProfile(res.data))
+}
+
+
+export const getStatusThunkCreator = (userId: string): AppThunk => async dispatch => {
+    let response = await profileAPI.getStatus(userId)
+    dispatch(setStatus(response.data))
+}
+
+export const updateStatusThunkCreator = (status: string): AppThunk => async dispatch => {
+    let res = await profileAPI.updateStatus(status)
+    if (res.data.resultCode === 0) {
+        dispatch(setStatus(status))
     }
 }
 
-export const getStatusThunkCreator = (userId: string) => {
-    return (dispatch: any) => {
-        profileAPI.getStatus(userId).then(response => {
-            dispatch(setStatus(response.data))
-        })
-    }
-}
 
-export const updateStatusThunkCreator = (status: string) => {
-    return (dispatch: any) => {
-        profileAPI.updateStatus(status).then(response => {
-            if(response.data.resultCode === 0){
-                dispatch(setStatus(status))
-            }
-        })
-    }
-}

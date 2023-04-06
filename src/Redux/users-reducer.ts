@@ -1,10 +1,7 @@
 import {usersAPI} from "../api/api";
-import {setAuthUsersData} from "./auth-reducer";
+import {AppThunk} from "src/Redux/redux-store";
+import {Dispatch} from "redux";
 
-type LocationType = {
-    country: string
-    city: string
-}
 export type UserType = {
     id: number
     name: string
@@ -84,6 +81,8 @@ export const usersReducer = (state: InitialStateType = initialState, action: any
             return state;
     }
 }
+
+//AC
 export const follow = (userId: number) => {
     return {
         type: "FOLLOW",
@@ -129,33 +128,30 @@ export const setIsFollowingDisabled = (isFetching: boolean, userId: number) => {
     } as const
 }
 
-export const getUsersThunkCreator = (currentPage: number, pageSize: number) => {      //getUsersThunkCreator - создатель санки
-    return (dispatch: any) => {
-        dispatch(setIsFetchingPreloader(true))
-        usersAPI.getUsers(currentPage, pageSize).then(data => {
-            dispatch(setUsers(data.data.items))
-            dispatch(setTotalUsersCount(data.data.totalCount))
-            dispatch(setIsFetchingPreloader(false))
-        })
-    }
+
+//TC
+
+const followUnfollowFlow = async (dispatch: Dispatch, userId: number, apiMethod: any, actionCreator: any) => {
+    dispatch(setIsFollowingDisabled(true, userId))
+    let res = await apiMethod(userId)
+    res.data.resultCode === 0 && dispatch(actionCreator(userId))
+    dispatch(setIsFollowingDisabled(false, userId))
+}
+export const getUsersThunkCreator = (currentPage: number, pageSize: number): AppThunk => async dispatch => {
+    dispatch(setIsFetchingPreloader(true))
+    let res = await usersAPI.getUsers(currentPage, pageSize)
+    dispatch(setUsers(res.data.items))
+    dispatch(setTotalUsersCount(res.data.totalCount))
+    dispatch(setIsFetchingPreloader(false))
 }
 
-export const followThunkCreator = (userId: number) => {
-    return (dispatch: any) => {
-        dispatch(setIsFollowingDisabled(true, userId))
-        usersAPI.follow(userId).then(response => {
-            response.data.resultCode === 0 && dispatch(follow(userId))
-            dispatch(setIsFollowingDisabled(false, userId))
-        })
-    }
+export const followThunkCreator = (userId: number): AppThunk => async dispatch => {
+    await followUnfollowFlow(dispatch, userId, usersAPI.follow.bind(usersAPI), follow)
+
+
 }
-export const unFollowThunkCreator = (userId: number) => {
-    return (dispatch: any) => {
-        dispatch(setIsFollowingDisabled(true, userId))
-        usersAPI.unFollow(userId)
-            .then(response => {
-                response.data.resultCode === 0 && dispatch(unFollow(userId))
-                dispatch(setIsFollowingDisabled(false, userId))
-            })
+
+export const unFollowThunkCreator = (userId: number): AppThunk =>
+    async dispatch => {
+        await followUnfollowFlow(dispatch, userId, usersAPI.unFollow.bind(usersAPI), unFollow)
     }
-}

@@ -1,9 +1,9 @@
 import {getAuthUsersThunkCreator} from "./auth-reducer";
-import {AppDispatch} from "src/Redux/redux-store";
+import {AppThunk} from "src/Redux/redux-store";
 
 
 export type InitialStateType = {
-  initialized: boolean
+    initialized: boolean
 }
 
 const initialState: InitialStateType = {
@@ -22,11 +22,11 @@ export const appReducer = (state: InitialStateType = initialState, action: any) 
     }
 }
 //AC
-export const initializedSuccessAC = () => ({type:"SET-INITIALIZED"})
+export const initializedSuccessAC = () => ({type: "SET-INITIALIZED"})
 //TC
-export const initializedAppTC = () =>(dispatch: AppDispatch)=> {
-   let promise = dispatch(getAuthUsersThunkCreator());
-   Promise.all([promise]) .then(()=>{
+export const initializedAppTC = (): AppThunk => dispatch => {
+    let promise = dispatch(getAuthUsersThunkCreator());
+    Promise.all([promise]).then(() => {
         dispatch(initializedSuccessAC())
     })
 }
