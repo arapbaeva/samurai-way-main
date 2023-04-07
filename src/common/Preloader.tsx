@@ -1,5 +1,5 @@
 import React from 'react';
-import Loading from '../images/Spinning arrows.gif'
+import Loading from '../assets/images/Spinning arrows.gif'
 
 export const Preloader = () => {
     return (

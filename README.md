@@ -24,3 +24,8 @@
 
 <hr>
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+<hr>
+Узнала существенную разницу функциональных компонент от классовых (дело НЕ в hook). Если интересно, ссылка на статью <i>Dan Abramov</i>
+
+https://overreacted.io/how-are-function-components-different-from-classes/
