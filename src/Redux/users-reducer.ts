@@ -1,6 +1,7 @@
 import {usersAPI} from "../api/api";
 import {AppThunk} from "src/Redux/redux-store";
 import {Dispatch} from "redux";
+import {updateObjectInArray} from "src/Utils/updateObjectInArray";
 
 export type UserType = {
     id: number
@@ -32,27 +33,18 @@ const initialState: InitialStateType = {
     followingInProgress: false
 }
 
-export const usersReducer = (state: InitialStateType = initialState, action: any): InitialStateType => {
+export const usersReducer = (state: InitialStateType = initialState, action: ActionsType): InitialStateType => {
     switch (action.type) {
         case "FOLLOW":
             return {
                 ...state,
-                users: state.users.map(el => {
-                    if (el.id === action.id) {
-                        return {...el, followed: true}
-                    }
-                    return el
-                }),
+               users:  updateObjectInArray(state.users, action.id, 'id', {followed:true})
             }
         case "UNFOLLOW":
             return {
                 ...state,
-                users: state.users.map(el => {
-                    if (el.id === action.id) {
-                        return {...el, followed: false}
-                    }
-                    return el
-                }),
+                users:  updateObjectInArray(state.users, action.id, 'id', {followed:false})
+
             }
         case "SET-USERS":
             return {
@@ -128,15 +120,47 @@ export const setIsFollowingDisabled = (isFetching: boolean, userId: number) => {
     } as const
 }
 
+type SetIsFollowingDisabledType = ReturnType<typeof setIsFollowingDisabled>
+type SetIsFetchingPreloaderType = ReturnType<typeof setIsFetchingPreloader>
+type SetTotalUsersCountType = ReturnType<typeof setTotalUsersCount>
+type SetCurrentPageType = ReturnType<typeof setCurrentPage>
+type SetUsersType = ReturnType<typeof setUsers>
+type UnFollowType = ReturnType<typeof unFollow>
+type FollowType = ReturnType<typeof follow>
+//
+type ActionsType =
+    SetIsFollowingDisabledType
+    | SetIsFetchingPreloaderType
+    | SetTotalUsersCountType
+    | SetCurrentPageType
+    | SetUsersType
+    | UnFollowType
+    | FollowType
+
+interface ApiMethodResponse {
+    data: {
+        resultCode: number;
+    }
+}
 
 //TC
-
-const followUnfollowFlow = async (dispatch: Dispatch, userId: number, apiMethod: any, actionCreator: any) => {
+const followUnfollowFlow = async (dispatch: Dispatch, userId: number, apiMethod: (userId: number) => Promise<ApiMethodResponse>, actionCreator: (userId: number) => ActionsType) => {
     dispatch(setIsFollowingDisabled(true, userId))
     let res = await apiMethod(userId)
     res.data.resultCode === 0 && dispatch(actionCreator(userId))
     dispatch(setIsFollowingDisabled(false, userId))
 }
+
+export const followThunkCreator = (userId: number): AppThunk => async dispatch => {
+    await followUnfollowFlow(dispatch, userId, usersAPI.follow.bind(usersAPI), follow)
+}
+
+export const unFollowThunkCreator = (userId: number): AppThunk =>
+    async dispatch => {
+        await followUnfollowFlow(dispatch, userId, usersAPI.unFollow.bind(usersAPI), unFollow)
+    }
+
+
 export const getUsersThunkCreator = (currentPage: number, pageSize: number): AppThunk => async dispatch => {
     dispatch(setIsFetchingPreloader(true))
     let res = await usersAPI.getUsers(currentPage, pageSize)
@@ -144,14 +168,3 @@ export const getUsersThunkCreator = (currentPage: number, pageSize: number): App
     dispatch(setTotalUsersCount(res.data.totalCount))
     dispatch(setIsFetchingPreloader(false))
 }
-
-export const followThunkCreator = (userId: number): AppThunk => async dispatch => {
-    await followUnfollowFlow(dispatch, userId, usersAPI.follow.bind(usersAPI), follow)
-
-
-}
-
-export const unFollowThunkCreator = (userId: number): AppThunk =>
-    async dispatch => {
-        await followUnfollowFlow(dispatch, userId, usersAPI.unFollow.bind(usersAPI), unFollow)
-    }
