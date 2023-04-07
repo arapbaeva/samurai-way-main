@@ -7,11 +7,11 @@ export type DialogItemType = {
 }
 
 
-export const DialogItem = (props: DialogItemType) => {
-    let path = '/dialogs/' + props.id
+export const DialogItem = ({name, id}: DialogItemType) => {
+    let path = '/dialogs/' + id
     return (
         <div>
-            <Link to={path}>{props.name}</Link>
+            <Link to={path}>{name}</Link>
         </div>
     )
 }

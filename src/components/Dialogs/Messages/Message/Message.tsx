@@ -2,13 +2,13 @@ import React from 'react';
 
 
 export type MessageType = {
-    id: number
+    id:number
     message: string
 }
-export const Message = (props:MessageType) => {
+export const Message = ({id, message}: MessageType) => {
     return (
         <div>
-            {props.message}
+            {message}
         </div>
     );
 };

@@ -1,22 +1,16 @@
-import React, {MouseEventHandler} from "react";
-import {Header} from "./Header";
+import React from "react";
+import {Header, HeaderType} from "./Header";
 import {connect} from "react-redux";
 import {AppRootStateType} from "src/Redux/redux-store";
 import {logOut} from "src/Redux/auth-reducer";
 
 
-
-type HeaderCType = {
-    isAuth: boolean
-    login: string
-    logOut: MouseEventHandler<HTMLButtonElement> | undefined
-}
-
-class HeaderContainer extends React.Component<HeaderCType> {
+class HeaderContainer extends React.Component<HeaderType> {
 
     render() {
+        const {isAuth, login, logOut} = this.props
         return <>
-            <Header isAuth={this.props.isAuth} login={this.props.login} logOut={this.props.logOut} />
+            <Header isAuth={isAuth} login={login} logOut={logOut}/>
         </>
     }
 }
@@ -24,7 +18,7 @@ class HeaderContainer extends React.Component<HeaderCType> {
 type MapStateToPropsType = {
     isAuth: boolean
     login: string
-    logOut:string
+    logOut: string
 }
 let MapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
     isAuth: state.auth.isAuth,

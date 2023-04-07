@@ -2,7 +2,7 @@ import React from 'react';
 import {DialogItem} from "./DialogItem/DialogItem";
 import s from './Dialogs.module.css';
 import MessagesContainer from "./Messages/Message/MessagesContainer";
-import {store} from "../../Redux/redux-store";
+import {store} from "src/Redux/redux-store";
 
 type DialogsDataType = {
     id: number

@@ -1,11 +1,11 @@
-import React, {ChangeEvent} from 'react'
+import React from 'react'
 import {Messages} from "../Messages";
-import {addMessageAC} from "../../../../Redux/dialogs-reducer";
+import {addMessageAC} from "src/Redux/dialogs-reducer";
 import {compose, Dispatch} from "redux";
 import {connect} from "react-redux";
-import {AppRootStateType} from "../../../../Redux/redux-store";
+import {AppRootStateType} from "src/Redux/redux-store";
 import {MessageType} from "./Message";
-import {WithAuthRedirect} from "../../../../hoc/withAuthRedirect";
+import {WithAuthRedirect} from "src/hoc/withAuthRedirect";
 
 type MapStatePropsType = {
     message: string
@@ -14,37 +14,25 @@ type MapStatePropsType = {
 }
 
 type MapDispatchPropsType = {
-    addMessage:(newMessageBody: string)=>void
+    addMessage: (newMessageBody: string) => void
 
 }
 export type PostsPropsType = MapStatePropsType & MapDispatchPropsType
-const MapStateToProps= (state: AppRootStateType): MapStatePropsType=>{
-  return {
-      message: state.dialogsReducer.newMessageText,
-      messages: state.dialogsReducer.messages,
-      isAuth: state.auth.isAuth
-  }
+const MapStateToProps = (state: AppRootStateType): MapStatePropsType => {
+    return {
+        message: state.dialogsReducer.newMessageText,
+        messages: state.dialogsReducer.messages,
+        isAuth: state.auth.isAuth
+    }
 }
 
-const MapDispatchToProps = (dispatch: Dispatch):MapDispatchPropsType => {
-     return {
-         addMessage: (newMessageBody)=>{
-             dispatch(addMessageAC(newMessageBody))
-         }
-     }
+const MapDispatchToProps = (dispatch: Dispatch): MapDispatchPropsType => {
+    return {
+        addMessage: (newMessageBody) => {
+            dispatch(addMessageAC(newMessageBody))
+        }
+    }
 }
 
-
-//     (props:MapStatePropsType) => {
-//     if (!props.isAuth) return  <Navigate replace to="/login" />
-//     return <MessagesContainer />
-// }
-
-export default compose<React.ComponentType>(connect(MapStateToProps, MapDispatchToProps),WithAuthRedirect)(Messages)
-
-// export const MessagesContainer = connect(MapStateToProps, MapDispatchToProps)(AuthRedirectComponent)
-//
-// let AuthRedirectComponent: any = WithAuthRedirect(MessagesContainer)
-
-
+export default compose<React.ComponentType>(connect(MapStateToProps, MapDispatchToProps), WithAuthRedirect)(Messages)
 

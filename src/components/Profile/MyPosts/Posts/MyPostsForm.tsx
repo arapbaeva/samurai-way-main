@@ -1,8 +1,8 @@
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import React from "react";
 import s from "../MyPost.module.css";
-import {maxLengthCreator, required} from "../../../../Utils/validators/validators";
-import {TextArea} from "../../../../common/FormControls";
+import {maxLengthCreator, required} from "src/Utils/validators/validators";
+import {TextArea} from "src/common/FormControls";
 
 export type AddPostFormType = {
     textarea: string

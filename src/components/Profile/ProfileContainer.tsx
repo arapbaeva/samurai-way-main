@@ -6,12 +6,12 @@ import {
     getUserProfileThunkCreator,
     ProfileType,
     updateStatusThunkCreator
-} from "../../Redux/profile-reducer";
-import {AppRootStateType} from "../../Redux/redux-store";
+} from "src/Redux/profile-reducer";
+import {AppRootStateType} from "src/Redux/redux-store";
 import {compose} from "redux";
-import {WithAuthRedirect} from "../../hoc/withAuthRedirect";
-import {withRouter} from "./ProfileContainerWithParams";
-import {Navigate, useNavigate} from "react-router-dom";
+import {WithAuthRedirect} from "src/hoc/withAuthRedirect";
+import {useNavigate} from "react-router-dom";
+import {withRouter} from "src/components/Profile/ProfileContainerWithParams";
 
 
 type ProfileCType = {
@@ -29,33 +29,32 @@ type ProfileCType = {
 
 class ProfileContainer extends React.Component<ProfileCType> {
 
-     navigate = () => {
-         const navigate = useNavigate();
-         navigate('/login');
+    navigate = () => {
+        const navigate = useNavigate();
+        navigate('/login');
     }
 
     shouldComponentUpdate(nextProps: Readonly<ProfileCType>, nextState: Readonly<{}>, nextContext: any): boolean {
-        console.log('authUserId', this.props.authorizedUserId)
-        console.log('nextauthUserId', nextProps.authorizedUserId)
         return false
     }
 
     componentDidMount() {
-        console.log('authUserId', this.props.authorizedUserId)
-        let userId = this.props.params.userId
-        if(!userId) {
-            userId = this.props.authorizedUserId;
+        const {params, authorizedUserId, getUserProfileThunkCreator, getStatusThunkCreator} = this.props
+        let userId = params.userId
+        if (!userId) {
+            userId = authorizedUserId;
             if (!userId) {
-               this.navigate()
+                this.navigate()
             }
         }
-        this.props.getUserProfileThunkCreator(userId)
-        this.props.getStatusThunkCreator(userId)
+        getUserProfileThunkCreator(userId)
+        getStatusThunkCreator(userId)
     }
 
     render() {
-        return <Profile photos={this.props.profile.photos} isAuth={this.props.isAuth} status={this.props.status}
-                        updateStatusThunkCreator={this.props.updateStatusThunkCreator}/>;
+        const {profile, isAuth, status, updateStatusThunkCreator} = this.props
+        return <Profile photos={profile.photos} isAuth={isAuth} status={status}
+                        updateStatusThunkCreator={updateStatusThunkCreator}/>;
     }
 }
 
@@ -63,15 +62,14 @@ type MapStateToPropsType = {
     profile: ProfileType
     isAuth: boolean
     status: string
-    authorizedUserId: string |  number
-  }
+    authorizedUserId: string | number
+}
 let MapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
     profile: state.profileReducer.profile,
     isAuth: state.auth.isAuth,
     status: state.profileReducer.status,
     authorizedUserId: state.auth.auth.data.id
 })
-
 
 
 export default compose<React.ComponentType>(connect(MapStateToProps, {

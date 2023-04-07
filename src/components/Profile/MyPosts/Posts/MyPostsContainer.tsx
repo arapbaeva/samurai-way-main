@@ -1,9 +1,9 @@
-import React, {ChangeEvent} from "react";
-import {addPostAC, PostsType, updatePostAC} from "../../../../Redux/profile-reducer";
+import React from "react";
+import {addPostAC, PostsType} from "src/Redux/profile-reducer";
 import {MyPosts} from "../MyPosts";
 import {Dispatch} from "redux";
 import {connect} from "react-redux";
-import {AppRootStateType} from "../../../../Redux/redux-store";
+import {AppRootStateType} from "src/Redux/redux-store";
 
 type MapStatePropsType = {
     posts: PostsType[]

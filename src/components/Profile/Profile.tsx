@@ -2,25 +2,21 @@ import React from 'react';
 import s from './Profile.module.css'
 import {ProfileInfo} from "./ProfileInfo/ProfileInfo";
 import {MyPostsContainer} from "./MyPosts/Posts/MyPostsContainer";
-import {PhotosType} from "../../Redux/profile-reducer";
+import {PhotosType} from "src/Redux/profile-reducer";
 
 
 type ProfilePropsType = {
-    updateStatusThunkCreator: (status: string)=>void
+    updateStatusThunkCreator: (status: string) => void
     status: string
     photos: PhotosType
     isAuth: boolean
 
 }
-export const Profile = (props: ProfilePropsType) => {
-    // if (!props.isAuth) return  <Navigate replace to="/login" />
-    // const {userId} = useParams<'userId'>()
-    // const navigate = useNavigate()
-    // if (!userId) navigate('/login')
-
+export const Profile = ({updateStatusThunkCreator, status, photos, isAuth}: ProfilePropsType) => {
     return <>
         <div className={s.content}>
-            <ProfileInfo photos={props.photos} status={props.status} updateStatusThunkCreator={props.updateStatusThunkCreator} />
+            <ProfileInfo photos={photos} status={status}
+                         updateStatusThunkCreator={updateStatusThunkCreator}/>
             <MyPostsContainer/>
         </div>
     </>

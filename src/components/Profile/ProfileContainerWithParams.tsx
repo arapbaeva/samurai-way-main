@@ -1,5 +1,4 @@
 import {useLocation, useNavigate, useParams} from "react-router-dom";
-import ProfileContainer from "./ProfileContainer";
 import React from "react";
 import {NavigateFunction} from "react-router/dist/lib/hooks";
 import {Location} from "@remix-run/router";
@@ -29,9 +28,3 @@ export const withRouter = <Props extends WithRouterProps>(
         );
     };
 };
-
-// export const ProfileContainerWithParams = () => {
-//     const {userId} = useParams()
-//
-//     return <ProfileContainer userId={userId || ''} />
-// }
