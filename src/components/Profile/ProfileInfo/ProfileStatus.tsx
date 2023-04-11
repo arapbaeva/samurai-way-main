@@ -3,7 +3,7 @@ import React, {ChangeEvent} from 'react';
 
 type ProfileStatusType = {
     status: string
-    updateStatusThunkCreator: (status: string) => void
+    updateStatusThunkCreator?: (status: string) => void
 }
 type StateType = {
     editMode: boolean
@@ -28,7 +28,7 @@ export class ProfileStatus extends React.Component<ProfileStatusType> {
         this.setState({
             editMode: false
         })
-        this.props.updateStatusThunkCreator(this.state.status)
+        this.props.updateStatusThunkCreator && this.props.updateStatusThunkCreator(this.state.status)
     }
 
     onStatusChange = (event:ChangeEvent<HTMLInputElement>) => {

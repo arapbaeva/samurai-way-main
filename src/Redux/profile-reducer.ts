@@ -76,8 +76,8 @@ const initialState: InitialStateType = {
     },
     status: ''
 }
-type ActionProfileType = ReturnType<typeof setUserProfile> | ReturnType<typeof addPostAC>
-    | ReturnType<typeof updatePostAC> | ReturnType<typeof setStatus>
+export type ActionProfileType = ReturnType<typeof setUserProfile> | ReturnType<typeof addPostAC>
+    | ReturnType<typeof updatePostAC> | ReturnType<typeof setStatus> | ReturnType<typeof deletePostAC>
 
 
 export const profileReducer = (state: InitialStateType = initialState, action: ActionProfileType): InitialStateType => {
@@ -94,6 +94,8 @@ export const profileReducer = (state: InitialStateType = initialState, action: A
             return {...state, profile: action.profile}
         case "SET-STATUS":
             return {...state, status: action.status}
+        case "DELETE-POST":
+            return {...state, posts: state.posts.filter(el => el.id !== action.id)}
         default:
             return state;
     }
@@ -125,6 +127,14 @@ export const setStatus = (status: string) => {
         status: status
     } as const
 }
+
+export const deletePostAC = (id: number) => {
+    return {
+        type: "DELETE-POST",
+        id
+    } as const
+}
+
 
 export const getUserProfileThunkCreator = (userId: string): AppThunk => async dispatch => {
     let res = await usersAPI.getUserProfile(userId)

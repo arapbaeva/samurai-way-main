@@ -34,11 +34,8 @@ class ProfileContainer extends React.Component<ProfileCType> {
         navigate('/login');
     }
 
-    shouldComponentUpdate(nextProps: Readonly<ProfileCType>, nextState: Readonly<{}>, nextContext: any): boolean {
-        return false
-    }
 
-    componentDidMount() {
+    refreshProfile() {
         const {params, authorizedUserId, getUserProfileThunkCreator, getStatusThunkCreator} = this.props
         let userId = params.userId
         if (!userId) {
@@ -49,6 +46,14 @@ class ProfileContainer extends React.Component<ProfileCType> {
         }
         getUserProfileThunkCreator(userId)
         getStatusThunkCreator(userId)
+    }
+
+    componentDidMount() {
+        this.refreshProfile()
+    }
+
+    componentDidUpdate(prevProps: Readonly<ProfileCType>, prevState: Readonly<{}>, snapshot?: any) {
+        this.refreshProfile()
     }
 
     render() {

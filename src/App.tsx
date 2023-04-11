@@ -1,23 +1,26 @@
 import React from 'react';
 import './App.css';
 import {Navbar} from "./components/Navbar/Navbar";
-import {Dialogs} from "./components/Dialogs/Dialogs";
 import {Route, Routes} from "react-router-dom";
-import UsersContainer from "./components/Users/UsersContainer";
 import {Store} from "redux";
-import ProfileContainer from "./components/Profile/ProfileContainer";
 import HeaderContainer from "./components/Header/HeaderContainer";
-import Login from "./components/Login/Login";
 import {connect} from "react-redux";
 import {initializedAppTC} from "./Redux/app-reducer";
 import {AppRootStateType} from "./Redux/redux-store";
-import {Preloader} from "./common/Preloader";
+import {LinearProgress} from "@mui/material";
+import {Preloader} from "src/common/Preloader";
+
 
 type AppType = {
     store: Store
     initializedAppTC: () => void
     initialized: boolean
 }
+const ProfileContainer = React.lazy(() => import("./components/Profile/ProfileContainer"));
+const UsersContainer = React.lazy(() => import( "./components/Users/UsersContainer"));
+const Dialogs = React.lazy(() => import( "./components/Dialogs/Dialogs"));
+const Login = React.lazy(() => import( "./components/Login/Login"));
+
 
 class App extends React.Component<AppType> {
     componentDidMount() {
@@ -25,13 +28,14 @@ class App extends React.Component<AppType> {
     }
     render() {
             if (!this.props.initialized) {
-                return <Preloader/>
+                return <Preloader />
             }
         return (
             <div className="wrapper">
                 <HeaderContainer/>
                 <Navbar/>
                 <div className="wrapper-content">
+                    <React.Suspense fallback={<div><LinearProgress /></div>}>
                     <Routes>
                         <Route path="/profile" element={<ProfileContainer/>}/>
                         <Route path="/profile/:userId" element={<ProfileContainer/>}/>
@@ -42,6 +46,7 @@ class App extends React.Component<AppType> {
                         <Route path="/login"
                                element={<Login/>}/>
                     </Routes>
+                    </React.Suspense>
                 </div>
             </div>
         );

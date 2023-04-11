@@ -10,7 +10,6 @@ import {
 } from "src/Redux/users-reducer";
 import React from "react";
 import {Users} from "./Users";
-import {Preloader} from "src/common/Preloader";
 import {compose} from "redux";
 import {
     getCurrentPage,
@@ -20,6 +19,8 @@ import {
     getTotalUsersCount,
     getUsers
 } from "src/Redux/users-selectors";
+import {LinearProgress} from "@mui/material";
+import {Preloader} from "src/common/Preloader";
 
 
 type MapStatePropsType = {
@@ -65,7 +66,7 @@ class UsersContainer extends React.Component<UserCType> {
             followThunkCreator
         } = this.props
         return <>
-            {isFetching ? <Preloader/> : null}
+            {isFetching ? <Preloader /> : null}
             <Users followed={followed} users={users} totalUsersCount={totalUsersCount}
                    currentPage={currentPage} pageSize={pageSize}
                    onPageChanged={this.onPageChanged} follow={follow} unFollow={unFollow}
