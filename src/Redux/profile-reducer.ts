@@ -1,5 +1,6 @@
-import {profileAPI, usersAPI} from "../api/api";
+import {PhotosType, profileAPI, usersAPI} from "../api/api";
 import {AppThunk} from "src/Redux/redux-store";
+import {getUsers} from "src/Redux/users-selectors";
 
 export type PostsType = {
     id: number
@@ -24,10 +25,7 @@ type ContactsType = {
     youtube: string
     mainLink: string
 }
-export type PhotosType = {
-    small: string
-    large: string
-}
+
 export type InitialStateType = {
     newPostText: string
     postText: string
@@ -76,8 +74,13 @@ const initialState: InitialStateType = {
     },
     status: ''
 }
-export type ActionProfileType = ReturnType<typeof setUserProfile> | ReturnType<typeof addPostAC>
-    | ReturnType<typeof updatePostAC> | ReturnType<typeof setStatus> | ReturnType<typeof deletePostAC>
+export type ActionProfileType =
+    ReturnType<typeof setUserProfile>
+    | ReturnType<typeof addPostAC>
+    | ReturnType<typeof updatePostAC>
+    | ReturnType<typeof setStatus>
+    | ReturnType<typeof deletePostAC>
+    | ReturnType<typeof savePhotoSuccess>
 
 
 export const profileReducer = (state: InitialStateType = initialState, action: ActionProfileType): InitialStateType => {
@@ -96,6 +99,11 @@ export const profileReducer = (state: InitialStateType = initialState, action: A
             return {...state, status: action.status}
         case "DELETE-POST":
             return {...state, posts: state.posts.filter(el => el.id !== action.id)}
+        case "SAVE-PHOTO-SUCCESS":
+            return {
+                ...state,
+                profile: {...state.profile, photos: action.photos}
+            }
         default:
             return state;
     }
@@ -135,6 +143,13 @@ export const deletePostAC = (id: number) => {
     } as const
 }
 
+export const savePhotoSuccess = (photos: PhotosType) => {
+    return {
+        type: "SAVE-PHOTO-SUCCESS",
+        photos
+    } as const
+}
+
 
 export const getUserProfileThunkCreator = (userId: string): AppThunk => async dispatch => {
     let res = await usersAPI.getUserProfile(userId)
@@ -151,6 +166,13 @@ export const updateStatusThunkCreator = (status: string): AppThunk => async disp
     let res = await profileAPI.updateStatus(status)
     if (res.data.resultCode === 0) {
         dispatch(setStatus(status))
+    }
+}
+export const savePhotoSuccessThunkCreator = (photos: FormData): AppThunk => async dispatch => {
+    console.log(photos)
+    let res = await profileAPI.savePhoto(photos)
+    if (res.data.resultCode === 0) {
+        dispatch(savePhotoSuccess(res.data.data.photos))
     }
 }
 

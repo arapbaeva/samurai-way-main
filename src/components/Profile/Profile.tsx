@@ -2,7 +2,8 @@ import React from 'react';
 import s from './Profile.module.css'
 import {ProfileInfo} from "./ProfileInfo/ProfileInfo";
 import {MyPostsContainer} from "./MyPosts/Posts/MyPostsContainer";
-import {PhotosType} from "src/Redux/profile-reducer";
+import {PhotosType} from "src/api/api";
+
 
 
 type ProfilePropsType = {
@@ -10,13 +11,13 @@ type ProfilePropsType = {
     status: string
     photos: PhotosType
     isAuth: boolean
-
+    isOwner: boolean
 }
-export const Profile = ({updateStatusThunkCreator, status, photos, isAuth}: ProfilePropsType) => {
+export const Profile = ({updateStatusThunkCreator, status, photos, isAuth, isOwner}: ProfilePropsType) => {
     return <>
         <div className={s.content}>
             <ProfileInfo photos={photos} status={status}
-                         updateStatusThunkCreator={updateStatusThunkCreator}/>
+                         updateStatusThunkCreator={updateStatusThunkCreator} isOwner={isOwner}/>
             <MyPostsContainer/>
         </div>
     </>

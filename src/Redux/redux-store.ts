@@ -6,6 +6,7 @@ import {authReducer} from "./auth-reducer";
 import thunkMiddleware, {ThunkAction, ThunkDispatch} from "redux-thunk"
 import {reducer as formReducer} from 'redux-form'
 import {appReducer} from "./app-reducer";
+import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
 
 
 export const RootReducer = combineReducers({
@@ -28,7 +29,9 @@ export const store = legacy_createStore(RootReducer, composeEnhancers(applyMiddl
 
 
 export type AppRootStateType = ReturnType<typeof store.getState>
-export type AppDispatch = ThunkDispatch<AppRootStateType, unknown, AnyAction>
+export type AppThunkDispatch = ThunkDispatch<AppRootStateType, any, AnyAction>
+export const useAppDispatch = () => useDispatch<AppThunkDispatch>();
+export const useAppSelector: TypedUseSelectorHook<AppRootStateType> = useSelector
 export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppRootStateType, unknown, AnyAction>
 
 //@ts-ignore

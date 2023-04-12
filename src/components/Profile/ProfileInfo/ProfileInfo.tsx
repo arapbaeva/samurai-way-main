@@ -1,23 +1,26 @@
 import React from 'react';
-import {PhotosType} from "../../../Redux/profile-reducer";
 import s from './ProfileInfo.module.css';
-import {ProfileStatus} from "./ProfileStatus";
 import {ProfileStatusWithHooks} from "./ProfileStatusWithHooks";
-import defaultUserPhoto from "../../../assets/images/default-avatar-profile-icon-of-social-media-user-vector.webp"
+import {PhotosType} from "src/api/api";
+import {InputTypeFile} from "src/common/InputTypeFile/InputTypeFile";
+import defaultAva from '../../../assets/images/default-avatar-profile-icon-of-social-media-user-vector.webp'
 
 
 export type ProfileInfoType = {
-    updateStatusThunkCreator: (status: string)=>void
+    updateStatusThunkCreator: (status: string) => void
     photos: PhotosType
     status: string
+    isOwner: boolean
 }
 
-export const ProfileInfo = (props:ProfileInfoType) => {
+export const ProfileInfo = ({updateStatusThunkCreator, photos, status, isOwner}: ProfileInfoType) => {
     return (
         <>
             <div className={s.ava}>
-                <img src={props.photos.large || defaultUserPhoto} alt="photo"/>
-                <ProfileStatusWithHooks status={props.status} updateStatusThunkCreator={props.updateStatusThunkCreator}/>
+                {isOwner
+                    ? <InputTypeFile photos={photos}/>
+                    : <img src={photos.large || defaultAva} alt="photo"/>}
+                <ProfileStatusWithHooks status={status} updateStatusThunkCreator={updateStatusThunkCreator}/>
             </div>
         </>
     );

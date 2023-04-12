@@ -53,13 +53,15 @@ class ProfileContainer extends React.Component<ProfileCType> {
     }
 
     componentDidUpdate(prevProps: Readonly<ProfileCType>, prevState: Readonly<{}>, snapshot?: any) {
-        this.refreshProfile()
+        if (this.props.params.userId !== prevProps.params.userId){
+            this.refreshProfile()
+        }
     }
 
     render() {
         const {profile, isAuth, status, updateStatusThunkCreator} = this.props
         return <Profile photos={profile.photos} isAuth={isAuth} status={status}
-                        updateStatusThunkCreator={updateStatusThunkCreator}/>;
+                        updateStatusThunkCreator={updateStatusThunkCreator} isOwner={!this.props.params.userId}/>;
     }
 }
 

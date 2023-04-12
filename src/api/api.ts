@@ -6,7 +6,7 @@ export const instance = axios.create({
     withCredentials: true,//https://social-network.samuraijs.com/api/1.0/auth/me
     baseURL: 'https://social-network.samuraijs.com/api/1.0/',
     headers: {
-        "API-KEY":" d8bb2236-9c1d-450b-a38b-3d8339a48b7d"
+        "API-KEY": " d8bb2236-9c1d-450b-a38b-3d8339a48b7d"
     }
 })
 
@@ -24,31 +24,44 @@ export const usersAPI = {
 
     },
     getAuthUsers() {
-         return instance.get(`auth/me`)
+        return instance.get(`auth/me`)
     },
-    login(email:string, password:string, rememberMe:boolean){
+    login(email: string, password: string, rememberMe: boolean) {
         return instance.post(`auth/login`, {email, password, rememberMe})
     },
-    logOut(){
+    logOut() {
         return instance.delete(`auth/login`)
     },
-    getUserProfile(userId: string){
-       console.warn("Obsolete method. Please use profileAPI object")
+    getUserProfile(userId: string) {
+        console.warn("Obsolete method. Please use profileAPI object")
         return profileAPI.getUserProfile(userId)
     }
 }
 export const profileAPI = {
-    getUserProfile(userId: string){
+    getUserProfile(userId: string) {
         return instance.get(`profile/${userId ? userId : '2'}`)
     },
-    getStatus(userId: string){
+    getStatus(userId: string) {
         return instance.get(`profile/status/${userId}`)
     },
-    updateStatus(status: string){
+    updateStatus(status: string) {
         return instance.put(`profile/status`, {status})
+    },
+    savePhoto(photos:FormData) {
+        return instance.put(`/profile/photo`, photos)
     }
 }
 
+// export type PhotoResponseType = {
+//     small?: string
+//     large?: string
+// }
+//
+
+export type PhotosType = {
+    small?: string
+  large?: string
+}
 
 
 
