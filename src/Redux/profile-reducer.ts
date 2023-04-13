@@ -55,7 +55,7 @@ const initialState: InitialStateType = {
     profile: {
         userId: 2,
         lookingForAJob: true,
-        lookingForAJobDescription: '',
+        lookingForAJobDescription: 'React',
         fullName: 'Bolot Sam',
         contacts: {
             github: '',

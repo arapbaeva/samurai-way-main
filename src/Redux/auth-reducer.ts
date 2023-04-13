@@ -1,4 +1,4 @@
-import {usersAPI} from "../api/api";
+import {securityAPI, usersAPI} from "../api/api";
 import {stopSubmit} from "redux-form";
 import {AppThunk} from "src/Redux/redux-store";
 
@@ -22,6 +22,7 @@ export type DataType = {
 export type InitialStateType = {
     auth: AuthType
     isAuth: boolean
+    captchaUrl:  string | null
 }
 
 
@@ -36,7 +37,8 @@ const initialState: InitialStateType = {
         resultCode: 5,
         messages: []
     },
-    isAuth: false
+    isAuth: false,
+    captchaUrl: ''
 }
 
 export const authReducer = (state: InitialStateType = initialState, action: ActionsType) => {
@@ -56,6 +58,11 @@ export const authReducer = (state: InitialStateType = initialState, action: Acti
                 ...state,
                 ...action.data,
                 isAuth: false
+            }
+        case  "GET-CAPTCHA-URL-SUCCESS":
+            return {
+                ...state,
+                captchaUrl: action.captchaUrl
             }
         default:
             return state;
@@ -79,6 +86,12 @@ export const setOutAuthUsersData = (data: DataType | null, isAuth: boolean) => {
         isAuth: isAuth
     } as const
 }
+export const getCaptchaUrlSuccess = (captchaUrl: null | string) => {
+    return {
+        type: "GET-CAPTCHA-URL-SUCCESS",
+        captchaUrl
+    } as const
+}
 
 //thunk
 export const getAuthUsersThunkCreator = ():AppThunk => async (dispatch) => {
@@ -88,14 +101,24 @@ export const getAuthUsersThunkCreator = ():AppThunk => async (dispatch) => {
     }
 }
 
-export const login = (email: string, password: string, rememberMe: boolean):AppThunk => async (dispatch) => {
-    let response = await usersAPI.login(email, password, rememberMe)
+export const login = (email: string, password: string, rememberMe: boolean, captcha: string):AppThunk => async (dispatch) => {
+    let response = await usersAPI.login(email, password, rememberMe, captcha)
     if (response.data.resultCode === 0) {
         dispatch(getAuthUsersThunkCreator())
-    } else {
+    }
+    else {
+        if(response.data.resultCode=== 10){
+            dispatch(getCaptchaUrlC())
+        }
         let message = response.data.messages.length > 0 ? response.data.messages[0] : "Some error"
         dispatch(stopSubmit('login', {_error: message}))
     }
+}
+
+export const getCaptchaUrlC = ():AppThunk => async (dispatch) => {
+    const response = await securityAPI.getCaptchaUrl()
+   const captChaUrl =response.data.url
+    dispatch(getCaptchaUrlSuccess(captChaUrl))
 }
 
 
@@ -110,7 +133,7 @@ export const logOut = ():AppThunk => {
 }
 
 
-type ActionsType = ReturnType<typeof setAuthUsersData> | ReturnType<typeof setOutAuthUsersData>
+type ActionsType = ReturnType<typeof setAuthUsersData> | ReturnType<typeof setOutAuthUsersData> | ReturnType<typeof getCaptchaUrlSuccess>
 
 
 

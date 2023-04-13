@@ -9,6 +9,7 @@ import {initializedAppTC} from "./Redux/app-reducer";
 import {AppRootStateType} from "./Redux/redux-store";
 import {LinearProgress} from "@mui/material";
 import {Preloader} from "src/common/Preloader";
+import {NotFound} from "src/components/NotFound/NotFound";
 
 
 type AppType = {
@@ -45,6 +46,7 @@ class App extends React.Component<AppType> {
                                element={<UsersContainer/>}/>
                         <Route path="/login"
                                element={<Login/>}/>
+                        <Route path="/*" element={<NotFound/>}/>
                     </Routes>
                     </React.Suspense>
                 </div>

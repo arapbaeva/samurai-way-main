@@ -26,8 +26,8 @@ export const usersAPI = {
     getAuthUsers() {
         return instance.get(`auth/me`)
     },
-    login(email: string, password: string, rememberMe: boolean) {
-        return instance.post(`auth/login`, {email, password, rememberMe})
+    login(email: string, password: string, rememberMe: boolean, captcha: string | null) {
+        return instance.post(`auth/login`, {email, password, rememberMe, captcha})
     },
     logOut() {
         return instance.delete(`auth/login`)
@@ -52,11 +52,15 @@ export const profileAPI = {
     }
 }
 
-// export type PhotoResponseType = {
-//     small?: string
-//     large?: string
-// }
-//
+export const securityAPI = {
+    getCaptchaUrl() {
+        return instance.get<CaptchaType>(`/security/get-captcha-url`)
+    }
+}
+
+type CaptchaType = {
+    url: string
+}
 
 export type PhotosType = {
     small?: string
