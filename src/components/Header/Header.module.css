@@ -1,13 +1,16 @@
 
 .header {
     grid-area: h;
-    background-color: #eeeee4;
     display: grid;
+
     grid-template-columns: 5fr 1fr;
 }
 .header img {
-    width: 50px;
-    margin-left: 5%;
-    margin-top: 5px;
-
+    width: 2.7rem;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    overflow: hidden;
 }
+
+
+

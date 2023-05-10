@@ -5,6 +5,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Fade from '@mui/material/Fade';
 import {NavLink} from "react-router-dom";
 import {HeaderType} from "src/components/Header/Header";
+import ProfileContainer from "src/components/Profile/ProfileContainer";
+import {Profile} from "src/components/Profile/Profile";
 
 
 export default function FadeMenu({isAuth, login, logOut}: HeaderType) {
@@ -20,15 +22,16 @@ export default function FadeMenu({isAuth, login, logOut}: HeaderType) {
 
     return (
         <div>
-            <Button
+            <button
                 id="fade-button"
                 aria-controls={open ? 'fade-menu' : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
                 onClick={handleClick}
+                className="btn btn-primary"
             >
                 Dashboard
-            </Button>
+            </button>
             <Menu
                 id="fade-menu"
                 MenuListProps={{
@@ -39,9 +42,9 @@ export default function FadeMenu({isAuth, login, logOut}: HeaderType) {
                 onClose={handleClose}
                 TransitionComponent={Fade}
             >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
-                <MenuItem>{isAuth ?<div>{login} - <button onClick={logOut}>LogOut</button></div>  : <NavLink to={'/login'}>Login</NavLink>}</MenuItem>
+                <MenuItem onClick={handleClose}><NavLink to={"/profile"}  >Profile</NavLink></MenuItem>
+                <MenuItem onClick={handleClose}><NavLink to={"/dialogs"} >Messages</NavLink></MenuItem>
+                <MenuItem>{isAuth ?<div>{login}<button onClick={logOut} className="btn">LogOut</button></div>  : <NavLink to={'/login'}>Login</NavLink>}</MenuItem>
             </Menu>
         </div>
     );

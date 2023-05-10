@@ -15,7 +15,6 @@
 
 .button{
     color: #333333;
-    font-family: 'Josefin Sans', sans-serif;
     height: 20px;
     width: 80px;
     border: 1px solid #333333;
@@ -33,11 +32,9 @@
     justify-content: space-around;
     border: 1px solid #333333;
     align-items: center;
-    /*width: calc(1/2*100% - (1 - 1/2)*20px);*/
     width: 400px;
     height: 70px;
     color: #333333;
-    font-family: 'Josefin Sans', sans-serif;
     margin: 10px;
     border-radius: 5px;
 }
