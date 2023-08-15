@@ -1,41 +1,42 @@
-import React from "react";
-import {UserType} from "src/Redux/users-reducer";
-import {Paginator} from "src/common/pagination/Paginator";
-import {User} from "src/components/Users/User";
+import React from 'react';
+import {UserType} from "../../redux/users-reducer";
+import Paginator from "../common/Paginator/Paginator";
+import User from "./User";
 
-type UsersType = {
+export type UsersPropsType = {
     totalUsersCount: number
     pageSize: number
-    onPageChanged: (p: number) => void
-    currentPage: number
-    unFollow: (userId: number) => void
-    follow: (userId: number) => void
-    followed: number[]
+    onPageChanged: (pageNumber: number) => void
     users: UserType[]
-    followingInProgress: boolean
-    unFollowThunkCreator: (userId: number) => void
-    followThunkCreator: (userId: number) => void
+    follow: (userId: string) => void
+    unfollow: (userId: string) => void
+    currentPage: number
+    followingInProgress: string[]
+    portionSize:number
 }
-export const Users = ({
-                          totalUsersCount,
-                          pageSize,
-                          onPageChanged,
-                          currentPage,
-                          followed,
-                          followThunkCreator,
-                          unFollowThunkCreator,
-                          users
-                      }: UsersType) => {
+// presend component
+const Users = (props: UsersPropsType) => {
+
     return (
-        <>
-            <Paginator totalUsersCount={totalUsersCount} pageSize={pageSize}
-                       onPageChanged={onPageChanged} currentPage={currentPage}/>
-
-            {users.map(el => <User key={el.id} user={el} followThunkCreator={followThunkCreator}
-                                   followed={followed} unFollowThunkCreator={unFollowThunkCreator}/>)}
-
-        </>
-    );
+        <div>
+            <Paginator
+                portionSize={props.portionSize}//
+                currentPage={props.currentPage} onPageChanged={props.onPageChanged}
+                       totalUsersCount={props.totalUsersCount}
+                       pageSize={props.pageSize}/>
+            <div>
+            {
+                props.users.map(u => <User user={u}
+                                           followingInProgress={props.followingInProgress}
+                                           key={u.id}
+                                           unfollow={props.unfollow}
+                                           follow={props.follow}
+                    />
+                )
+            }
+            </div>
+        </div>
+    )
 }
 
-
+export default Users;

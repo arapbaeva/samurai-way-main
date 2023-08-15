@@ -1,86 +1,94 @@
-import React from 'react';
-import {Profile} from "./Profile";
+import React from "react";
+import Profile, {ProfileType} from "./Profile";
 import {connect} from "react-redux";
+import {AppStateType} from "../../redux/redux-store";
 import {
-    getStatusThunkCreator,
-    getUserProfileThunkCreator,
-    ProfileType,
-    updateStatusThunkCreator
-} from "src/Redux/profile-reducer";
-import {AppRootStateType} from "src/Redux/redux-store";
+    getFriendsProfile,
+    getStatus,
+    getUserProfile,
+    savePhoto,
+    saveProfile,
+    updateStatus
+} from "../../redux/profile-reducer";
+import {RouteComponentProps, withRouter} from "react-router-dom";
+import {WithAuthRedirect} from "../../hoc/WithAuthRedirect";
 import {compose} from "redux";
-import {WithAuthRedirect} from "src/hoc/withAuthRedirect";
-import {useNavigate} from "react-router-dom";
-import {withRouter} from "src/components/Profile/ProfileContainerWithParams";
+import {ProfileFormData} from "./ProfileInfo/ProfileDataForm";
 
 
-type ProfileCType = {
-    getUserProfileThunkCreator: (userId: string) => void
-    getStatusThunkCreator: (userId: string) => void
-    updateStatusThunkCreator: (status: string) => void
-    profile: ProfileType
-    params: Record<string, string>
-    isAuth: boolean
-    status: string
-    userId: string
-    authorizedUserId: string
+class ProfileContainer extends React.Component<ProfilePropsType> {
 
-}
-
-class ProfileContainer extends React.Component<ProfileCType> {
-
-    navigate = () => {
-        const navigate = useNavigate();
-        navigate('/login');
-    }
-
+    private userId: string | null = null;
 
     refreshProfile() {
-        const {params, authorizedUserId, getUserProfileThunkCreator, getStatusThunkCreator} = this.props
-        let userId = params.userId
-        if (!userId) {
-            userId = authorizedUserId;
-            if (!userId) {
-                this.navigate()
+        this.userId = this.props.match.params.userId;
+        if (!this.userId) {
+            this.userId = String(this.props.authorizedUserId)
+            if (!this.userId) {
+                this.props.history.push("login")
             }
         }
-        getUserProfileThunkCreator(userId)
-        getStatusThunkCreator(userId)
+        this.props.getFriendsProfile()
+        this.props.getUserProfile(this.userId);
+        this.props.getStatus(this.userId);
     }
 
     componentDidMount() {
-        this.refreshProfile()
+        this.refreshProfile();
     }
 
-    componentDidUpdate(prevProps: Readonly<ProfileCType>, prevState: Readonly<{}>, snapshot?: any) {
-        if (this.props.params.userId !== prevProps.params.userId){
-            this.refreshProfile()
+    componentDidUpdate(prevProps: Readonly<ProfilePropsType>, prevState: Readonly<{}>, snapshot?: any) {
+        if (this.props.match.params.userId !== prevProps.match.params.userId) {
+            this.refreshProfile();
         }
     }
 
     render() {
-        const {profile, isAuth, status, updateStatusThunkCreator} = this.props
-        return <Profile photos={profile.photos} isAuth={isAuth} status={status}
-                        updateStatusThunkCreator={updateStatusThunkCreator} isOwner={!this.props.params.userId}/>;
+        return (
+            <div>
+                <Profile
+                    isOwner={!this.props.match.params.userId}
+                    //@ts-ignore
+                    profile={this.props.profile}
+                    status={this.props.status}
+                    updateStatus={this.props.updateStatus}
+                    savePhoto={this.props.savePhoto}
+                    saveProfile={this.props.saveProfile}
+                />
+
+            </div>
+        )
     }
 }
 
-type MapStateToPropsType = {
-    profile: ProfileType
-    isAuth: boolean
-    status: string
-    authorizedUserId: string | number
-}
-let MapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
-    profile: state.profileReducer.profile,
+let mapStateToProps = (state: AppStateType) => ({
+    profile: state.profilePage.profile,
+    status: state.profilePage.status,
+    authorizedUserId: state.auth.userId,
     isAuth: state.auth.isAuth,
-    status: state.profileReducer.status,
-    authorizedUserId: state.auth.auth.data.id
+    friends: state.profilePage.friends
 })
 
+type MapDispatchToPropsType = {
+    getUserProfile: (userId: string) => void
+    getStatus: (userId: string) => void
+    updateStatus: (status: string) => void
+    getFriendsProfile: () => void
+    savePhoto: (file: File) => void
+    saveProfile:(profile: ProfileFormData) => Promise<void>
+}
 
-export default compose<React.ComponentType>(connect(MapStateToProps, {
-    getUserProfileThunkCreator,
-    getStatusThunkCreator,
-    updateStatusThunkCreator
-}), WithAuthRedirect, withRouter)(ProfileContainer)
+export type ProfilePropsType =
+    ReturnType<typeof mapStateToProps>
+    & MapDispatchToPropsType
+    & RouteComponentProps<PathParamsType>
+
+type PathParamsType = {
+    userId: string
+}
+
+export default compose<React.ComponentType>(
+    connect(mapStateToProps, {getUserProfile, getStatus, updateStatus, getFriendsProfile, savePhoto, saveProfile}),//
+    withRouter,
+    // WithAuthRedirect
+)(ProfileContainer);

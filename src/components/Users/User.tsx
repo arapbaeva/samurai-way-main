@@ -1,60 +1,55 @@
-import React from "react";
-import s from "./Users.module.css";
-import userPhoto from "src/assets/images/default-avatar-profile-icon-of-social-media-user-vector.webp";
-import {UserType} from "src/Redux/users-reducer";
+import React from 'react';
+import styles from "./Users.module.css";
+import usersPhoto from "../../assets/imges/user.png";
 import {NavLink} from "react-router-dom";
+import {UserType} from "../../redux/users-reducer";
 
-
-type PropsType = {
+export type UserPropsType = {
     user: UserType
-    followed: number[]
-    unFollowThunkCreator: (userId: number) => void
-    followThunkCreator: (userId: number) => void
+    followingInProgress: string[]
+    unfollow: (userId: string) => void
+    follow: (userId: string) => void
 }
-export const User = ({user, followed, unFollowThunkCreator, followThunkCreator}: PropsType) => {
+
+const User = (props: UserPropsType) => {
+
     return (
-        <>
-            <div className={s.userWrapper}>
-                <div className={s.avatar}>
-                    <span>
-                                <NavLink to={'/profile/' + user.id}>
-                                      <img className={s.img}
-                                           src={user.photos.small != null ? user.photos.small : userPhoto}
-                                           alt='avatar'/>
-                                </NavLink>
+        <div>
+           <span>
+              <div>
+                  <NavLink to={'/profile/' + props.user.id}>
+                  <img src={props.user.photos.small !== null ? props.user.photos.small : usersPhoto} className={styles.userPhoto}/>
+                      </NavLink>
+              </div>
+              <div>
+                  {
+                      props.user.followed
+                          ? <button disabled={props.followingInProgress.some(id => id === props.user.id)}
+                                    onClick={() => {
+                                        props.unfollow(props.user.id)
+                                    }}>
+                              UnFollow</button>
 
-                                <div>
-                                    {user.followed ?
-                                        <button disabled={followed.some((id) => id === user.id)} className={s.button}
-                                                onClick={() => {
-                                                    unFollowThunkCreator(user.id)
-                                                }}>UnFollow</button>
-                                        : <button disabled={followed.some((id) => id === user.id)} className={s.button}
-                                                  onClick={() => {
-                                                      followThunkCreator(user.id)
-                                                  }}>Follow</button>}
-                                </div>
-                </span></div>
-                <div className={s.userDesc}>
-                    <div>
-                        <div>
-                            {user.name}
-                        </div>
-                        <div>
-                            {user.status}
-                        </div>
-                    </div>
-                    <div>
-                        <div>
-                            {'el.location.country'}
-                        </div>
-                        <div>
-                            {'el.location.city'}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </>
-    );
+                          : <button disabled={props.followingInProgress.some(id => id === props.user.id)}
+                                    onClick={() => {
+                                        props.follow(props.user.id)
+                                    }}>
+                              Follow</button>
+                  }
+              </div>
+          </span>
+            <span>
+          <span>
+              <div>{props.user.name}</div>
+              <div>{props.user.status}</div>
+          </span>
+          <span>
+              <div>{props.user.location?.country}</div>
+              <div>{props.user.location?.city}</div>
+          </span>
+              </span>
+        </div>
+    )
 }
 
+export default User;

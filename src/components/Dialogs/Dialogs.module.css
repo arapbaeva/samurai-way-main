@@ -1,17 +1,21 @@
 .dialogs {
     display: grid;
     grid-template-columns: 2fr 10fr;
-    padding: 10px;
 }
-.dialogItem,.message {
-    color: #333333;
-    font-size: 18px;
+
+.dialogsItems {
+    padding: 10px;
+    color: white;
+}
+
+.dialogsItems .active {
+    color: gold;
+}
+
+.messages {
     padding: 10px;
 }
 
-.messageBlock {
-    display: grid;
-    grid-template-rows: 1fr 1fr;
-    grid-gap: 5px;
-
+.messages .message {
+color: white;
 }

@@ -1,29 +1,29 @@
-import {AppRootStateType} from "./redux-store";
+import {AppStateType} from "./redux-store";
+import {createSelector} from "reselect";
 
-export const getUsers=(state: AppRootStateType)=>{
-    return state.usersReducer.users
+const getUsersSelector = (state: AppStateType) => {
+    return state.usersPage.users
 }
 
-export const getPageSize=(state: AppRootStateType)=>{
-    return state.usersReducer.pageSize
-}
+export const getUsers = createSelector(getUsersSelector, (users) => {
+    return users.filter(u => true)
+})
 
-export const getTotalUsersCount=(state: AppRootStateType)=>{
-    return state.usersReducer.totalUsersCount
+export const getPageSize = (state: AppStateType) => {
+    return state.usersPage.pageSize
 }
-
-export const getCurrentPage=(state: AppRootStateType)=>{
-    return state.usersReducer.currentPage
+export const getTotalUsersCount = (state: AppStateType) => {
+    return state.usersPage.totalUsersCount
 }
-
-export const getIsFetching=(state: AppRootStateType)=>{
-    return state.usersReducer.isFetching
+export const getCurrentPage = (state: AppStateType) => {
+    return state.usersPage.currentPage
 }
-
-export const getFollowed=(state: AppRootStateType)=>{
-    return state.usersReducer.followed
+export const getIsFetching = (state: AppStateType) => {
+    return state.usersPage.isFetching
 }
-
-export const getFollowingInProgress=(state: AppRootStateType)=>{
-    return state.usersReducer.followingInProgress
+export const getFollowingInProgress = (state: AppStateType) => {
+    return state.usersPage.followingInProgress
+}
+export const getPortionSize = (state: AppStateType) => {
+    return state.usersPage.portionSize
 }

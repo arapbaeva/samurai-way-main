@@ -1,25 +1,33 @@
-import React from 'react';
-import {DialogItem} from "./DialogItem/DialogItem";
+import React from "react";
 import s from './Dialogs.module.css';
-import MessagesContainer from "./Messages/Message/MessagesContainer";
-import {store} from "src/Redux/redux-store";
+import DialogItem from "./DialogItem/DialogItem";
+import Message from "./Message/Message";
+import {DialogsPropsType} from "./DialogsContainer";
+import {AddMessageFormRedux, MessageFormDataType} from "./AddMessageForm";
 
-type DialogsDataType = {
-    id: number
-    name: string
 
-}
- const Dialogs = () => {
-    const state = store.getState().dialogsReducer
-    let dialogsElements = state.dialogsData.map((el:DialogsDataType) => <DialogItem key={el.id} name={el.name} id={el.id}/>)
+const Dialogs = (props: DialogsPropsType) => {
+
+    let state = props.dialogsPage
+    let dialogsElements = state.dialogs.map(dialog => <DialogItem name={dialog.name} key={dialog.id} id={dialog.id}/>);
+    let messagesElements = state.messages.map(message => <Message message={message.message} key={message.id}/>);
+
+    let addNewMessage = (values:MessageFormDataType) => {
+        props.sedMessage(values.newMessageBody)
+    }
 
     return (
         <div className={s.dialogs}>
-            <div className={s.dialogItem}>
+            <div className={s.dialogsItems}>
                 {dialogsElements}
             </div>
-          <MessagesContainer />
+            <div className={s.messages}>
+                <div>{messagesElements}</div>
+            </div>
+            <AddMessageFormRedux onSubmit={addNewMessage}/>
         </div>
     )
 }
-export default Dialogs;
+
+
+export default Dialogs

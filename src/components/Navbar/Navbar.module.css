@@ -1,18 +1,17 @@
-
-
 .nav {
-    grid-area: n;
-    background-color: #000;
+    grid-area: nav;
+    background-color: rgba(69, 52, 105, 0.45);
     padding: 20px;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
-.item a{
-    color: #333333;
-    font-size: 18px;
+
+.item a {
+    color: white;
     text-decoration: none;
 }
 
-
- .item a:active{
+.item a.activeLink {
     color: gold;
 }

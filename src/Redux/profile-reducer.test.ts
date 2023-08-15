@@ -1,23 +1,12 @@
-import {addPostAC, deletePostAC, profileReducer} from "src/Redux/profile-reducer";
+import profileReducer, {addPostActionCreator, deletePostAC} from "./profile-reducer";
+import {ProfileType} from "../components/Profile/Profile";
 
-
-const state = {
-    newPostText: '',
-    postText: '',
+let state = {
     posts: [
-        {
-            id: 1,
-            message: 'Happy Monday Laura! I have good news, the shoes you inquired about are back in stock in your size. I set a pair aside for you to come pick up this week.',
-            likesCount: 12
-        },
-        {
-            id: 2,
-            message: 'You’re almost done buying your new mattress and getting the best sleep of your life! Remember to enter your payment info to select a delivery date ',
-            likesCount: 25
-        },
-        {
-            id: 3, message: 'Hi Joe, thank you for taking the time for a call today. ', likesCount: 17
-        }
+        {id: 1, message: 'Hi, how are you?', likesCont: 12},
+        {id: 2, message: 'It\'s my first post', likesCont: 11},
+        {id: 3, message: 'Blabla', likesCont: 12},
+        {id: 4, message: 'Dada', likesCont: 11},
     ],
     profile: {
         userId: 2,
@@ -39,37 +28,43 @@ const state = {
             large: ''
         }
     },
-    status: ''
-}
+    friends: [],
+    status: "",
+    newPostText: ''
+};
 
-it('length of posts should be incremented', () => {
-    let action = addPostAC('it-kamasutra.com')
+it ('length of posts should be incremented', () => {
 
-    let newState = profileReducer(state, action)
-    expect(newState.posts.length).toBe(4)
-    expect(newState.posts[3].message).toBe('it-kamasutra.com')
-})
-
-it('message of new post should be correct', ()=>{
- let action = addPostAC('it-kamasutra.com')
+    let action = addPostActionCreator("it-kamasutra.com")
 
     let newState = profileReducer(state, action)
-    expect(newState.posts[3].message).toBe('it-kamasutra.com')
+
+    expect(newState.posts.length).toBe(5)
 })
 
-it('after deleting length of messages should be decrement', ()=>{
+it ('message of new post should be correct', () => {
+
+    let action = addPostActionCreator("it-kamasutra.com")
+
+    let newState = profileReducer(state, action)
+
+    expect(newState.posts[4].message).toBe("it-kamasutra.com")
+})
+
+it ('after deleting length of messages should be decrement', () => {
+
     let action = deletePostAC(1)
 
     let newState = profileReducer(state, action)
-    expect(newState.posts.length).toBe(2)
-})
 
-it("after deleting length shouldn't be decrement, if id is incorrect", ()=>{
-    let action = deletePostAC(1000)
-
-    let newState = profileReducer(state, action)
     expect(newState.posts.length).toBe(3)
 })
 
+it (`after deleting length shouldn't be decrement if id is incorrect`, () => {
 
+    let action = deletePostAC(1000)
 
+    let newState = profileReducer(state, action)
+
+    expect(newState.posts.length).toBe(4)
+})

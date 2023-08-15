@@ -1,48 +1,44 @@
-export type MessageType = {
-    id: number
-    message: string
-}
-export type DialogsDataType = {
-    id: number
-    name: string
-}
-export type InitialStateType = typeof initialState
 
-const initialState = {
-    newMessageText: '',
-    dialogsData: [
+let initialState = {
+    dialogs: [
         {id: 1, name: 'Dimych'},
-        {id: 2, name: 'Aiym'},
-        {id: 3, name: 'Nurai'}
-    ] as Array<DialogsDataType>,
+        {id: 2, name: 'Andrew'},
+        {id: 3, name: 'Sveta'},
+        {id: 4, name: 'Sasha'},
+        {id: 5, name: 'Victor'},
+        {id: 6, name: 'Valera'},
+    ],
     messages: [
-        {id: 1, message: 'Hello!'},
-        {id: 2, message: 'Hi!'},
-        {id: 3, message: 'What kind?'}
-    ] as Array<MessageType>
+        {id: 1, message: 'Hi'},
+        {id: 2, message: 'How is your it-kamasutra?'},
+        {id: 3, message: 'Yo'},
+        {id: 4, message: 'Yo'},
+        {id: 5, message: 'Yo'},
+    ],
 }
 
-type ActionDialogsType = | ReturnType<typeof addMessageAC>
+const SEND_MESSAGE = 'dialog/SEND-MESSAGE';
 
-export const dialogsReducer = (state: InitialStateType = initialState, action: ActionDialogsType): InitialStateType => {
+export const dialogsReducer = (state = initialState, action: DialogsActionsType) => {
+
     switch (action.type) {
-        case "ADD-MESSAGE":
-            const newMessageText: MessageType = {
-                id: new Date().getTime(),
-                message: action.newMessageBody
-            }
-            return {...state, messages: [...state.messages, newMessageText]};
+        case SEND_MESSAGE:
+            let body = action.newMessageBody;
+            return {
+                ...state,
+                messages: [...state.messages, {id: 6, message: body}]
+            };
         default:
-            return state
+            return state;
     }
 }
 
-export const addMessageAC = (newMessageBody: string) => {
-    return {
-        type: "ADD-MESSAGE",
-        newMessageBody: newMessageBody
-    } as const
-}
+export const sedMessageCreator = (newMessageBody:string) => ({ //iz
+    type: 'dialog/SEND-MESSAGE',newMessageBody
+} as const)
 
+type SendMessageACType = ReturnType<typeof sedMessageCreator>
 
-//после каждого кейса нужно breakнуть кейс, но при каждом ретёрне стейта кейс автоматически брейкнется.
+export type DialogsActionsType = SendMessageACType
+
+export default dialogsReducer;

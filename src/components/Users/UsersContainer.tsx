@@ -1,102 +1,83 @@
+import React from 'react';
 import {connect} from "react-redux";
-import {AppRootStateType} from "src/Redux/redux-store";
-import {
-    follow, followThunkCreator,
-    getUsersThunkCreator,
-    setCurrentPage,
-    setIsFollowingDisabled,
-    unFollow, unFollowThunkCreator,
-    UserType
-} from "src/Redux/users-reducer";
-import React from "react";
-import {Users} from "./Users";
+import Users from "./Users";
+import {AppStateType} from "../../redux/redux-store";
+import {follow, requestUsers, setCurrentPage, unfollow} from "../../redux/users-reducer";
+import Preloader from "../common/preloader/Preloader";
+import {WithAuthRedirect} from "../../hoc/WithAuthRedirect";
 import {compose} from "redux";
 import {
+    getUsers,
     getCurrentPage,
-    getFollowed, getFollowingInProgress,
+    getFollowingInProgress,
     getIsFetching,
     getPageSize,
     getTotalUsersCount,
-    getUsers
-} from "src/Redux/users-selectors";
-import {LinearProgress} from "@mui/material";
-import {Preloader} from "src/common/Preloader";
+    getPortionSize
+} from "../../redux/users-selectors";
 
+//контейнерная компонента
+class UsersContainer extends React.Component<UsersProps> {
 
-type MapStatePropsType = {
-    users: Array<UserType>
-    pageSize: number
-    totalUsersCount: number
-    currentPage: number
-    isFetching: boolean
-    followed: number[]
-    followingInProgress: boolean
-}
-type UserCType = {
-    users: UserType[], pageSize: number
-    totalUsersCount: number, currentPage: number, unFollow: (userId: number) => void, follow: (userId: number) => void, setCurrentPage: (currentPage: number) => void, isFetching: boolean, setIsFollowingDisabled: (isFetching: boolean) => void, followingInProgress: boolean, getUsersThunkCreator: (currentPage: number, pageSize: number) => void, unFollowThunkCreator: (userId: number) => void,
-    followed: number[]
-    followThunkCreator: (userId: number) => void
-}
-
-class UsersContainer extends React.Component<UserCType> {
     componentDidMount() {
-        const {getUsersThunkCreator, currentPage, pageSize} = this.props
-        getUsersThunkCreator(currentPage, pageSize)
+        this.props.requestUsers(this.props.currentPage, this.props.pageSize,this.props.friend);
     }
 
     onPageChanged = (pageNumber: number) => {
-        const {setCurrentPage, getUsersThunkCreator} = this.props
-        setCurrentPage(pageNumber)
-        getUsersThunkCreator(pageNumber, this.props.pageSize)
+        this.props.requestUsers(pageNumber, this.props.pageSize,this.props.friend);
     }
+    render() { //дай мне JSX, не делает перерисовку(render)
 
-    render() {
-        const {
-            isFetching,
-            followed,
-            users,
-            totalUsersCount,
-            currentPage,
-            pageSize,
-            follow,
-            unFollow,
-            followingInProgress,
-            unFollowThunkCreator,
-            followThunkCreator
-        } = this.props
-        return <>
-            {isFetching ? <Preloader /> : null}
-            <Users followed={followed} users={users} totalUsersCount={totalUsersCount}
-                   currentPage={currentPage} pageSize={pageSize}
-                   onPageChanged={this.onPageChanged} follow={follow} unFollow={unFollow}
-                   followingInProgress={followingInProgress}
-                   unFollowThunkCreator={unFollowThunkCreator}
-                   followThunkCreator={followThunkCreator}/>
-        </>
+        return (
+            <>
+                {this.props.isFetching ? <Preloader/> : null}
+                <Users
+                    portionSize={this.props.portionSize}
+                    totalUsersCount={this.props.totalUsersCount}
+                       pageSize={this.props.pageSize}
+                       currentPage={this.props.currentPage}
+                       onPageChanged={this.onPageChanged}
+                       users={this.props.users}
+                       follow={this.props.follow}
+                       unfollow={this.props.unfollow}
+                       followingInProgress={this.props.followingInProgress}
+                />
+            </>
+        )
     }
 }
 
-const MapStateToProps = (state: AppRootStateType): MapStatePropsType => {
+let mapStateToProps = (state: AppStateType) => {
     return {
         users: getUsers(state),
         pageSize: getPageSize(state),
         totalUsersCount: getTotalUsersCount(state),
         currentPage: getCurrentPage(state),
         isFetching: getIsFetching(state),
-        followed: getFollowed(state),
         followingInProgress: getFollowingInProgress(state),
+        portionSize:getPortionSize(state)
     }
 }
 
+type MDPType = {
+    follow: (userId: string) => void
+    unfollow: (userId: string) => void
+    setCurrentPage: (pageNumber: number) => void
+    requestUsers: (currentPage: number, pageSize: number,friend?:boolean) => void
+}
 
-export default compose<React.ComponentType>(connect(MapStateToProps, {
-        follow,
-        unFollow,
-        setCurrentPage,
-        setIsFollowingDisabled,
-        getUsersThunkCreator,
-        unFollowThunkCreator,
-        followThunkCreator
-    })
-)(UsersContainer)
+const mapDispatchToProps = {
+    follow,
+    unfollow,
+    setCurrentPage,
+    requestUsers
+}
+
+export type UsersProps = ReturnType<typeof mapStateToProps> & MDPType & {friend?:boolean}
+
+export default compose<React.ComponentType<any>>(
+    //WithAuthRedirect,//защита
+    connect(mapStateToProps, mapDispatchToProps)
+)(UsersContainer);
+
+

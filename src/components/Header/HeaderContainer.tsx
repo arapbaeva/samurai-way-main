@@ -1,29 +1,35 @@
-import React from "react";
-import {Header, HeaderType} from "./Header";
+import React from 'react';
+import Header from "./Header";
 import {connect} from "react-redux";
-import {AppRootStateType} from "src/Redux/redux-store";
-import {logOut} from "src/Redux/auth-reducer";
+import {AppStateType} from "../../redux/redux-store";
+import {logout} from "../../redux/auth-reducer";
 
 
-class HeaderContainer extends React.Component<HeaderType> {
+export type PropsType = {
+    getAuthUserData: () => void
+}
+
+class HeaderContainer extends React.Component<AllPropsType> {
 
     render() {
-        const {isAuth, login, logOut} = this.props
-        return <>
-            <Header isAuth={isAuth} login={login} logOut={logOut}/>
-        </>
+        return <Header {...this.props} logout={this.props.logout}/>
     }
 }
-
-type MapStateToPropsType = {
-    isAuth: boolean
-    login: string
-    logOut: string
+export type AllPropsType = PropsType & {
+    isAuth: boolean | null,
+    login: string | null,
+    logout: () => void
 }
-let MapStateToProps = (state: AppRootStateType): MapStateToPropsType => ({
-    isAuth: state.auth.isAuth,
-    login: state.auth.auth.data.login,
-    logOut: state.auth.auth.data.logout
-})
 
-export default connect(MapStateToProps, {logOut})(HeaderContainer);
+export type AllPropsTypeForLoginComponent =  {
+    isAuth: boolean | null,
+    captchaUrl:string | null
+    login: (email:string,password:string,rememberMe:boolean, captcha:string | null) => void,
+}
+
+const mapStateToProps = (state:AppStateType) => ({
+    isAuth: state.auth.isAuth,
+    login: state.auth.login,
+})
+                                                       //thunk
+export default connect(mapStateToProps,{logout}) (HeaderContainer);

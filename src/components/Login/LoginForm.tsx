@@ -1,34 +1,48 @@
-import React, {useRef} from 'react';
+import React from "react";
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
-import {Input} from "../../common/FormControls";
-import {required} from "../../Utils/validators/validators";
-import  style from "../../common/FormControls.module.css"
-import {LoginFormValuesType} from "src/components/Login/Login";
+import {required} from "../../utils/validators/validators";
+import {Input} from "../common/FormsControls/FormsControls";
+import styles from "../common/FormsControls/FormsControls.module.css";
 
-type LoginFormOwnProps = {
-    captchaUrl: string | null
+export type LoginFormDataType = {
+    email: string
+    password: string
+    rememberMe: boolean
+    captcha:string | null
 }
 
-export const LoginForm: React.FC<InjectedFormProps<LoginFormValuesType, LoginFormOwnProps> & LoginFormOwnProps> = ({handleSubmit,error,captchaUrl}) => {
+export type LoginFormPropsType = {
+    captchaUrl:string | null
+}
+
+export const LoginForm: React.FC<InjectedFormProps<LoginFormDataType,LoginFormPropsType> & LoginFormPropsType> = ({handleSubmit,error,captchaUrl}) => {
+
     return (
-        <div>
-            <h1>Login</h1>
-            <form onSubmit={handleSubmit}>
-                <div><Field validate={[required]} placeholder={'Email'} name={"email"} component={Input}/></div>
-                <div><Field validate={[required]} placeholder={'Password'} name={"password"} type={"password"} component={Input}/></div>
-                <div><Field type={"checkbox"} name={"rememberMe"} component={Input}/>remember me</div>
+        <form onSubmit={handleSubmit}>
+            <div>
+                <Field placeholder={"Email"} name={"email"}
+                       validate={[required]}
+                       component={Input}/>
+            </div>
+            <div>
+                <Field placeholder={"Password"} name={"password"} type={"password"}
+                       validate={[required]}
+                       component={Input}/>
+            </div>
+            <div>
+                <Field placeholder={"remember me"} component={Input} name={"rememberMe"} type={"checkbox"}/>
+            </div>
+            {captchaUrl && <img src={captchaUrl}/>}
+            {captchaUrl && <Field placeholder={"Symbols from image"} name={"captcha"} validate={[required]} component={Input} /> }
 
-                {captchaUrl && <img src={captchaUrl} />}
-                {captchaUrl &&  <div><Field validate={[required]} placeholder={'Symbols from image'}  name={'captcha'} component={Input}/></div>}
-                <div>
-                    {error && <div className={style.formSummaryError}>
-                        {error}
-                    </div>}
-                    <button>Login</button>
-                </div>
-            </form>
-        </div>
-    );
-};
+            {error && <div className={styles.formSummaryError}>
+                {error}
+            </div>}
+            <div>
+                <button>Login</button>
+            </div>
+        </form>
+    )
+}
 
-export const LoginReduxForm = reduxForm<LoginFormValuesType, LoginFormOwnProps>({form: 'login'})(LoginForm)
+export const LoginReduxForm = reduxForm<LoginFormDataType,LoginFormPropsType>({form: 'login'})(LoginForm)
